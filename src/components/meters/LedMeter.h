@@ -45,7 +45,13 @@ public:
    * negative = more reduction). LEDs light from the top downward in a
    * single amber colour, and the linear-to-dB conversion is skipped.
    */
-  void setGainReductionMode(bool enabled) { grMode = enabled; if (enabled) { setPeakHoldEnabled(false); buildSegments(); } }
+  void setGainReductionMode(bool enabled) {
+    grMode = enabled;
+    if (enabled) {
+      setPeakHoldEnabled(false);
+      buildSegments();
+    }
+  }
 
 private:
   // ---- Segment definition ----

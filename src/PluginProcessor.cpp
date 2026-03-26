@@ -19,13 +19,12 @@ constexpr auto abSlotNameB = "B";
 } // namespace
 
 ScomeotropeAudioProcessor::ScomeotropeAudioProcessor()
-    : AudioProcessor(BusesProperties()
-                         .withInput("Input", juce::AudioChannelSet::stereo(), true)
-                         .withOutput("Output", juce::AudioChannelSet::stereo(), true)),
-      apvts(*this, nullptr, "Parameters", RuntimeParameters::createLayout())
-,
-      faustBridge(apvts)
-{
+    : AudioProcessor(
+          BusesProperties()
+              .withInput("Input", juce::AudioChannelSet::stereo(), true)
+              .withOutput("Output", juce::AudioChannelSet::stereo(), true)),
+      apvts(*this, nullptr, "Parameters", RuntimeParameters::createLayout()),
+      faustBridge(apvts) {
   defaultPresetState = captureCurrentState();
   initialiseABSlotsFromCurrentState();
 }
@@ -36,29 +35,17 @@ const juce::String ScomeotropeAudioProcessor::getName() const {
   return JucePlugin_Name;
 }
 
-bool ScomeotropeAudioProcessor::acceptsMidi() const {
-  return false;
-}
+bool ScomeotropeAudioProcessor::acceptsMidi() const { return false; }
 
-bool ScomeotropeAudioProcessor::producesMidi() const {
-  return false;
-}
+bool ScomeotropeAudioProcessor::producesMidi() const { return false; }
 
-bool ScomeotropeAudioProcessor::isMidiEffect() const {
-  return false;
-}
+bool ScomeotropeAudioProcessor::isMidiEffect() const { return false; }
 
-double ScomeotropeAudioProcessor::getTailLengthSeconds() const {
-  return 0.0;
-}
+double ScomeotropeAudioProcessor::getTailLengthSeconds() const { return 0.0; }
 
-int ScomeotropeAudioProcessor::getNumPrograms() {
-  return 1;
-}
+int ScomeotropeAudioProcessor::getNumPrograms() { return 1; }
 
-int ScomeotropeAudioProcessor::getCurrentProgram() {
-  return 0;
-}
+int ScomeotropeAudioProcessor::getCurrentProgram() { return 0; }
 
 void ScomeotropeAudioProcessor::setCurrentProgram(int index) {
   juce::ignoreUnused(index);
@@ -70,12 +57,12 @@ const juce::String ScomeotropeAudioProcessor::getProgramName(int index) {
 }
 
 void ScomeotropeAudioProcessor::changeProgramName(int index,
-                                               const juce::String &newName) {
+                                                  const juce::String &newName) {
   juce::ignoreUnused(index, newName);
 }
 
 void ScomeotropeAudioProcessor::prepareToPlay(double sampleRate,
-                                           int samplesPerBlock) {
+                                              int samplesPerBlock) {
   currentSampleRate = sampleRate;
   inputMeterPeak.store(0.0f);
   outputMeterPeak.store(0.0f);
@@ -86,7 +73,7 @@ void ScomeotropeAudioProcessor::prepareToPlay(double sampleRate,
   meterSamplesSinceLastUpdate = 0;
   meterUpdateIntervalSamples = juce::jmax(256, samplesPerBlock);
 
-faustBridge.prepare(sampleRate, samplesPerBlock);
+  faustBridge.prepare(sampleRate, samplesPerBlock);
 }
 
 void ScomeotropeAudioProcessor::releaseResources() {
@@ -99,19 +86,24 @@ juce::ValueTree ScomeotropeAudioProcessor::captureCurrentState() {
   return state;
 }
 
-juce::ValueTree ScomeotropeAudioProcessor::createWrappedPluginState(bool includeABState) {
+juce::ValueTree
+ScomeotropeAudioProcessor::createWrappedPluginState(bool includeABState) {
   juce::ValueTree wrappedState(pluginStateRootType);
-  wrappedState.setProperty(pluginStatePropertySchemaVersion, stateSchemaVersion, nullptr);
-  wrappedState.setProperty(pluginStatePropertyPluginVersion, JucePlugin_VersionString, nullptr);
+  wrappedState.setProperty(pluginStatePropertySchemaVersion, stateSchemaVersion,
+                           nullptr);
+  wrappedState.setProperty(pluginStatePropertyPluginVersion,
+                           JucePlugin_VersionString, nullptr);
   syncActiveABSlotFromCurrentState();
   wrappedState.appendChild(captureCurrentState(), nullptr);
 
   if (includeABState) {
-    wrappedState.setProperty(pluginStatePropertyActiveABSlot,
-                             activeABSlot == ABSlot::A ? abSlotNameA : abSlotNameB,
-                             nullptr);
-    wrappedState.setProperty(pluginStatePropertySlotAPresetName, slotAPresetName, nullptr);
-    wrappedState.setProperty(pluginStatePropertySlotBPresetName, slotBPresetName, nullptr);
+    wrappedState.setProperty(
+        pluginStatePropertyActiveABSlot,
+        activeABSlot == ABSlot::A ? abSlotNameA : abSlotNameB, nullptr);
+    wrappedState.setProperty(pluginStatePropertySlotAPresetName,
+                             slotAPresetName, nullptr);
+    wrappedState.setProperty(pluginStatePropertySlotBPresetName,
+                             slotBPresetName, nullptr);
 
     juce::ValueTree slotAWrapper(pluginStateChildSlotA);
     slotAWrapper.appendChild(slotAState.createCopy(), nullptr);
@@ -125,16 +117,20 @@ juce::ValueTree ScomeotropeAudioProcessor::createWrappedPluginState(bool include
   return wrappedState;
 }
 
-juce::ValueTree ScomeotropeAudioProcessor::migrateStateTree(juce::ValueTree savedTree) const {
+juce::ValueTree
+ScomeotropeAudioProcessor::migrateStateTree(juce::ValueTree savedTree) const {
   auto schemaVersion = savedTree.getProperty(pluginStatePropertySchemaVersion);
   if (!schemaVersion.isInt() || static_cast<int>(schemaVersion) < 1)
-    savedTree.setProperty(pluginStatePropertySchemaVersion, stateSchemaVersion, nullptr);
+    savedTree.setProperty(pluginStatePropertySchemaVersion, stateSchemaVersion,
+                          nullptr);
 
   if (!savedTree.hasProperty(pluginStatePropertyPluginVersion))
-    savedTree.setProperty(pluginStatePropertyPluginVersion, JucePlugin_VersionString, nullptr);
+    savedTree.setProperty(pluginStatePropertyPluginVersion,
+                          JucePlugin_VersionString, nullptr);
 
   if (!savedTree.hasProperty(pluginStatePropertyActiveABSlot))
-    savedTree.setProperty(pluginStatePropertyActiveABSlot, abSlotNameA, nullptr);
+    savedTree.setProperty(pluginStatePropertyActiveABSlot, abSlotNameA,
+                          nullptr);
 
   if (!savedTree.hasProperty(pluginStatePropertySlotAPresetName))
     savedTree.setProperty(pluginStatePropertySlotAPresetName, "Init", nullptr);
@@ -145,8 +141,8 @@ juce::ValueTree ScomeotropeAudioProcessor::migrateStateTree(juce::ValueTree save
   return savedTree;
 }
 
-juce::ValueTree
-ScomeotropeAudioProcessor::extractPluginStateFromSavedTree(const juce::ValueTree &savedTree) const {
+juce::ValueTree ScomeotropeAudioProcessor::extractPluginStateFromSavedTree(
+    const juce::ValueTree &savedTree) const {
   if (!savedTree.isValid())
     return {};
 
@@ -161,7 +157,8 @@ ScomeotropeAudioProcessor::extractPluginStateFromSavedTree(const juce::ValueTree
   return pluginState.isValid() ? pluginState.createCopy() : juce::ValueTree{};
 }
 
-void ScomeotropeAudioProcessor::applyStateToApvts(const juce::ValueTree &stateToApply) {
+void ScomeotropeAudioProcessor::applyStateToApvts(
+    const juce::ValueTree &stateToApply) {
   if (!stateToApply.isValid())
     return;
 
@@ -185,11 +182,13 @@ void ScomeotropeAudioProcessor::syncActiveABSlotFromCurrentState() {
   getMutableABState(activeABSlot) = captureCurrentState();
 }
 
-void ScomeotropeAudioProcessor::sanitiseTransientState(juce::ValueTree &state) const {
+void ScomeotropeAudioProcessor::sanitiseTransientState(
+    juce::ValueTree &state) const {
   juce::ignoreUnused(state);
 }
 
-void ScomeotropeAudioProcessor::setActivePresetName(const juce::String &presetName) {
+void ScomeotropeAudioProcessor::setActivePresetName(
+    const juce::String &presetName) {
   if (activeABSlot == ABSlot::A)
     slotAPresetName = presetName;
   else
@@ -200,7 +199,8 @@ juce::ValueTree &ScomeotropeAudioProcessor::getMutableABState(ABSlot slot) {
   return slot == ABSlot::A ? slotAState : slotBState;
 }
 
-const juce::ValueTree &ScomeotropeAudioProcessor::getABState(ABSlot slot) const {
+const juce::ValueTree &
+ScomeotropeAudioProcessor::getABState(ABSlot slot) const {
   return slot == ABSlot::A ? slotAState : slotBState;
 }
 
@@ -238,8 +238,8 @@ void ScomeotropeAudioProcessor::swapABSlots() {
 
 juce::StringArray ScomeotropeAudioProcessor::getAvailablePresetNames() const {
   juce::StringArray names;
-  for (const auto &preset :
-       PluginPresetManager::getAvailablePresets(defaultPresetState, apvts.state.getType()))
+  for (const auto &preset : PluginPresetManager::getAvailablePresets(
+           defaultPresetState, apvts.state.getType()))
     names.add(preset.name);
   return names;
 }
@@ -257,8 +257,8 @@ juce::String ScomeotropeAudioProcessor::getDisplayedPresetName() {
 
   const auto activePresetName = getActivePresetName();
   const auto currentState = captureCurrentState();
-  const auto presetState =
-      PluginPresetManager::loadPresetState(activePresetName, defaultPresetState, apvts.state.getType());
+  const auto presetState = PluginPresetManager::loadPresetState(
+      activePresetName, defaultPresetState, apvts.state.getType());
 
   if (!presetState.isValid())
     return activePresetName;
@@ -272,8 +272,8 @@ bool ScomeotropeAudioProcessor::isActivePresetFactory() const {
 }
 
 bool ScomeotropeAudioProcessor::loadPreset(const juce::String &presetName) {
-  auto presetState =
-      PluginPresetManager::loadPresetState(presetName, defaultPresetState, apvts.state.getType());
+  auto presetState = PluginPresetManager::loadPresetState(
+      presetName, defaultPresetState, apvts.state.getType());
   if (!presetState.isValid())
     return false;
 
@@ -296,7 +296,8 @@ bool ScomeotropeAudioProcessor::saveUserPreset(const juce::String &presetName) {
 bool ScomeotropeAudioProcessor::deleteActiveUserPreset() {
   auto presetName = getActivePresetName();
   if (presetName.isEmpty() ||
-      PluginPresetManager::isFactoryPreset(presetName, defaultPresetState, apvts.state.getType()))
+      PluginPresetManager::isFactoryPreset(presetName, defaultPresetState,
+                                           apvts.state.getType()))
     return false;
 
   if (!PluginPresetManager::deleteUserPreset(presetName))
@@ -318,8 +319,8 @@ void ScomeotropeAudioProcessor::clearABState() {
 }
 
 void ScomeotropeAudioProcessor::updatePeakMeter(std::atomic<float> &meterState,
-                                              float blockPeak,
-                                              int numSamples) noexcept {
+                                                float blockPeak,
+                                                int numSamples) noexcept {
   const auto heldPeak = meterState.load(std::memory_order_relaxed);
   if (blockPeak >= heldPeak) {
     meterState.store(blockPeak, std::memory_order_relaxed);
@@ -327,27 +328,29 @@ void ScomeotropeAudioProcessor::updatePeakMeter(std::atomic<float> &meterState,
   }
 
   const auto decayTimeSeconds = 0.16f;
-  const auto decay =
-      std::exp(-static_cast<float>(numSamples) /
-               static_cast<float>(juce::jmax(1.0, currentSampleRate * decayTimeSeconds)));
+  const auto decay = std::exp(-static_cast<float>(numSamples) /
+                              static_cast<float>(juce::jmax(
+                                  1.0, currentSampleRate * decayTimeSeconds)));
   meterState.store(heldPeak * decay, std::memory_order_relaxed);
 }
 
-bool ScomeotropeAudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const {
+bool ScomeotropeAudioProcessor::isBusesLayoutSupported(
+    const BusesLayout &layouts) const {
   const auto mainInput = layouts.getMainInputChannelSet();
   const auto mainOutput = layouts.getMainOutputChannelSet();
 
   if (mainOutput != juce::AudioChannelSet::stereo())
     return false;
 
-  if (mainInput != juce::AudioChannelSet::mono() && mainInput != juce::AudioChannelSet::stereo())
+  if (mainInput != juce::AudioChannelSet::mono() &&
+      mainInput != juce::AudioChannelSet::stereo())
     return false;
 
   return true;
 }
 
 void ScomeotropeAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
-                                          juce::MidiBuffer &midiMessages) {
+                                             juce::MidiBuffer &midiMessages) {
   juce::ignoreUnused(midiMessages);
   juce::ScopedNoDenormals noDenormals;
 
@@ -360,58 +363,65 @@ void ScomeotropeAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
   auto getMaxPeak = [&buffer](int numChannels) {
     auto peak = 0.0f;
     for (int ch = 0; ch < numChannels; ++ch)
-      peak = juce::jmax(peak, buffer.getMagnitude(ch, 0, buffer.getNumSamples()));
+      peak =
+          juce::jmax(peak, buffer.getMagnitude(ch, 0, buffer.getNumSamples()));
     return peak;
   };
 
   auto getChannelPeak = [&buffer](int ch) {
     if (ch < buffer.getNumChannels())
-      return juce::jlimit(0.0f, 1.2f, buffer.getMagnitude(ch, 0, buffer.getNumSamples()));
+      return juce::jlimit(0.0f, 1.2f,
+                          buffer.getMagnitude(ch, 0, buffer.getNumSamples()));
     return 0.0f;
   };
 
   meterSamplesSinceLastUpdate += buffer.getNumSamples();
-  const bool shouldMeasurePeaks = meterSamplesSinceLastUpdate >= meterUpdateIntervalSamples;
+  const bool shouldMeasurePeaks =
+      meterSamplesSinceLastUpdate >= meterUpdateIntervalSamples;
   if (shouldMeasurePeaks) {
     updatePeakMeter(inputMeterPeak,
                     juce::jlimit(0.0f, 1.2f, getMaxPeak(totalNumInputChannels)),
                     meterSamplesSinceLastUpdate);
-    updatePeakMeter(inputMeterPeakL, getChannelPeak(0), meterSamplesSinceLastUpdate);
-    updatePeakMeter(inputMeterPeakR, getChannelPeak(totalNumInputChannels > 1 ? 1 : 0),
+    updatePeakMeter(inputMeterPeakL, getChannelPeak(0),
+                    meterSamplesSinceLastUpdate);
+    updatePeakMeter(inputMeterPeakR,
+                    getChannelPeak(totalNumInputChannels > 1 ? 1 : 0),
                     meterSamplesSinceLastUpdate);
   }
 
-faustBridge.process(buffer, totalNumInputChannels, totalNumOutputChannels);
+  faustBridge.process(buffer, totalNumInputChannels, totalNumOutputChannels);
   gainReductionDb.store(faustBridge.getCompGr(), std::memory_order_relaxed);
   gainReductionDbL.store(faustBridge.getCompGrL(), std::memory_order_relaxed);
   gainReductionDbR.store(faustBridge.getCompGrR(), std::memory_order_relaxed);
-if (shouldMeasurePeaks) {
-    updatePeakMeter(outputMeterPeak,
-                    juce::jlimit(0.0f, 1.2f, getMaxPeak(totalNumOutputChannels)),
+  if (shouldMeasurePeaks) {
+    updatePeakMeter(
+        outputMeterPeak,
+        juce::jlimit(0.0f, 1.2f, getMaxPeak(totalNumOutputChannels)),
+        meterSamplesSinceLastUpdate);
+    updatePeakMeter(outputMeterPeakL, getChannelPeak(0),
                     meterSamplesSinceLastUpdate);
-    updatePeakMeter(outputMeterPeakL, getChannelPeak(0), meterSamplesSinceLastUpdate);
-    updatePeakMeter(outputMeterPeakR, getChannelPeak(totalNumOutputChannels > 1 ? 1 : 0),
+    updatePeakMeter(outputMeterPeakR,
+                    getChannelPeak(totalNumOutputChannels > 1 ? 1 : 0),
                     meterSamplesSinceLastUpdate);
     meterSamplesSinceLastUpdate = 0;
   }
 }
 
-bool ScomeotropeAudioProcessor::hasEditor() const {
-  return true;
-}
+bool ScomeotropeAudioProcessor::hasEditor() const { return true; }
 
 juce::AudioProcessorEditor *ScomeotropeAudioProcessor::createEditor() {
   return new ScomeotropeAudioProcessorEditor(*this);
 }
 
-void ScomeotropeAudioProcessor::getStateInformation(juce::MemoryBlock &destData) {
+void ScomeotropeAudioProcessor::getStateInformation(
+    juce::MemoryBlock &destData) {
   auto state = createWrappedPluginState(true);
   std::unique_ptr<juce::XmlElement> xml(state.createXml());
   copyXmlToBinary(*xml, destData);
 }
 
 void ScomeotropeAudioProcessor::setStateInformation(const void *data,
-                                                 int sizeInBytes) {
+                                                    int sizeInBytes) {
   std::unique_ptr<juce::XmlElement> xml(getXmlFromBinary(data, sizeInBytes));
   if (xml == nullptr)
     return;
@@ -425,18 +435,25 @@ void ScomeotropeAudioProcessor::setStateInformation(const void *data,
 
   if (restoredTree.hasType(pluginStateRootType)) {
     auto migratedTree = migrateStateTree(restoredTree.createCopy());
-    auto restoredSlotAWrapper = migratedTree.getChildWithName(pluginStateChildSlotA);
-    auto restoredSlotBWrapper = migratedTree.getChildWithName(pluginStateChildSlotB);
+    auto restoredSlotAWrapper =
+        migratedTree.getChildWithName(pluginStateChildSlotA);
+    auto restoredSlotBWrapper =
+        migratedTree.getChildWithName(pluginStateChildSlotB);
 
-    auto restoredSlotA = restoredSlotAWrapper.getChildWithName(apvts.state.getType());
-    auto restoredSlotB = restoredSlotBWrapper.getChildWithName(apvts.state.getType());
+    auto restoredSlotA =
+        restoredSlotAWrapper.getChildWithName(apvts.state.getType());
+    auto restoredSlotB =
+        restoredSlotBWrapper.getChildWithName(apvts.state.getType());
 
     if (restoredSlotA.isValid() && restoredSlotB.isValid()) {
       slotAState = restoredSlotA.createCopy();
       slotBState = restoredSlotB.createCopy();
-      slotAPresetName = migratedTree[pluginStatePropertySlotAPresetName].toString();
-      slotBPresetName = migratedTree[pluginStatePropertySlotBPresetName].toString();
-      activeABSlot = migratedTree[pluginStatePropertyActiveABSlot].toString() == abSlotNameB
+      slotAPresetName =
+          migratedTree[pluginStatePropertySlotAPresetName].toString();
+      slotBPresetName =
+          migratedTree[pluginStatePropertySlotBPresetName].toString();
+      activeABSlot = migratedTree[pluginStatePropertyActiveABSlot].toString() ==
+                             abSlotNameB
                          ? ABSlot::B
                          : ABSlot::A;
       applyStateToApvts(getABState(activeABSlot));

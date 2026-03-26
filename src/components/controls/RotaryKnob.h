@@ -9,14 +9,13 @@
 class RotaryKnob : public juce::Component {
 public:
   RotaryKnob(juce::AudioProcessorValueTreeState &apvts,
-             const juce::String &paramID,
-             const juce::String &labelText,
-             const juce::String &suffix = "",
-             bool showAsPercentage = false);
+             const juce::String &paramID, const juce::String &labelText,
+             const juce::String &suffix = "", bool showAsPercentage = false);
   ~RotaryKnob() override = default;
 
   void resized() override;
-  void setMeterSource(std::function<float()> meterSource, bool meterColourValueText = true);
+  void setMeterSource(std::function<float()> meterSource,
+                      bool meterColourValueText = true);
   void refreshMeter();
 
   juce::Slider &getSlider() { return slider; }
@@ -28,7 +27,8 @@ private:
   std::function<float()> meterSource;
   float meterPeak = 0.0f;
   bool meterColourValueText = false;
-  std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attachment;
+  std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>
+      attachment;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RotaryKnob)
 };

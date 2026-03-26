@@ -47,17 +47,23 @@ public:
 
   juce::AudioProcessorValueTreeState apvts;
 
-FaustBridge &getFaustBridge() { return faustBridge; }
+  FaustBridge &getFaustBridge() { return faustBridge; }
 
-float getInputMeterPeak() const { return inputMeterPeak.load(); }
+  float getInputMeterPeak() const { return inputMeterPeak.load(); }
   float getOutputMeterPeak() const { return outputMeterPeak.load(); }
   float getInputMeterPeakL() const { return inputMeterPeakL.load(); }
   float getInputMeterPeakR() const { return inputMeterPeakR.load(); }
   float getOutputMeterPeakL() const { return outputMeterPeakL.load(); }
   float getOutputMeterPeakR() const { return outputMeterPeakR.load(); }
-  float getGainReductionDb() const { return gainReductionDb.load(std::memory_order_relaxed); }
-  float getGainReductionDbL() const { return gainReductionDbL.load(std::memory_order_relaxed); }
-  float getGainReductionDbR() const { return gainReductionDbR.load(std::memory_order_relaxed); }
+  float getGainReductionDb() const {
+    return gainReductionDb.load(std::memory_order_relaxed);
+  }
+  float getGainReductionDbL() const {
+    return gainReductionDbL.load(std::memory_order_relaxed);
+  }
+  float getGainReductionDbR() const {
+    return gainReductionDbR.load(std::memory_order_relaxed);
+  }
   ABSlot getActiveABSlot() const { return activeABSlot; }
   bool hasDistinctABState() const;
   juce::StringArray getAvailablePresetNames() const;
@@ -76,7 +82,8 @@ float getInputMeterPeak() const { return inputMeterPeak.load(); }
 private:
   juce::ValueTree captureCurrentState();
   juce::ValueTree createWrappedPluginState(bool includeABState);
-  juce::ValueTree extractPluginStateFromSavedTree(const juce::ValueTree &savedTree) const;
+  juce::ValueTree
+  extractPluginStateFromSavedTree(const juce::ValueTree &savedTree) const;
   juce::ValueTree migrateStateTree(juce::ValueTree savedTree) const;
   void applyStateToApvts(const juce::ValueTree &stateToApply);
   void initialiseABSlotsFromCurrentState();
@@ -85,11 +92,12 @@ private:
   void setActivePresetName(const juce::String &presetName);
   juce::ValueTree &getMutableABState(ABSlot slot);
   const juce::ValueTree &getABState(ABSlot slot) const;
-  void updatePeakMeter(std::atomic<float> &meterState, float blockPeak, int numSamples) noexcept;
+  void updatePeakMeter(std::atomic<float> &meterState, float blockPeak,
+                       int numSamples) noexcept;
 
-FaustBridge faustBridge;
+  FaustBridge faustBridge;
 
-juce::ValueTree defaultPresetState;
+  juce::ValueTree defaultPresetState;
   juce::ValueTree slotAState;
   juce::ValueTree slotBState;
   ABSlot activeABSlot = ABSlot::A;

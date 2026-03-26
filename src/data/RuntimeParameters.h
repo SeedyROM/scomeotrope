@@ -9,4 +9,3 @@ inline juce::AudioProcessorValueTreeState::ParameterLayout createLayout() {
   return FaustParams::createLayout();
 }
 } // namespace RuntimeParameters
-

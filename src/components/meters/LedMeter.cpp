@@ -205,10 +205,10 @@ void LedMeter::paint(juce::Graphics &g) {
     const auto &seg = segments[static_cast<size_t>(i)];
 
     // Y position: segment 0 is at the bottom
-    const float y = stripBounds.getBottom() -
-                    (i + 1) * segmentHeight - i * segmentGap;
-    const auto ledRect = juce::Rectangle<float>(stripBounds.getX(), y,
-                                                 ledWidth, segmentHeight);
+    const float y =
+        stripBounds.getBottom() - (i + 1) * segmentHeight - i * segmentGap;
+    const auto ledRect =
+        juce::Rectangle<float>(stripBounds.getX(), y, ledWidth, segmentHeight);
 
     bool isLit = false;
     bool isPeakHold = false;
@@ -218,16 +218,15 @@ void LedMeter::paint(juce::Graphics &g) {
       // displayPeakDb is negative (e.g. -10). Light segments whose
       // thresholdDb >= displayPeakDb (i.e. from 0 down to the GR depth).
       isLit = (displayPeakDb < -0.01f) && (seg.thresholdDb >= displayPeakDb);
-      isPeakHold =
-          peakHoldEnabled && !isLit &&
-          (peakHoldDb < -0.01f) && (seg.thresholdDb >= peakHoldDb) &&
-          (seg.thresholdDb < displayPeakDb); // only below the current lit region
+      isPeakHold = peakHoldEnabled && !isLit && (peakHoldDb < -0.01f) &&
+                   (seg.thresholdDb >= peakHoldDb) &&
+                   (seg.thresholdDb <
+                    displayPeakDb); // only below the current lit region
     } else {
       // Normal mode: light from bottom upward.
       isLit = (displayPeakDb > seg.thresholdDb);
       isPeakHold =
-          peakHoldEnabled && !isLit &&
-          (peakHoldDb >= seg.thresholdDb) &&
+          peakHoldEnabled && !isLit && (peakHoldDb >= seg.thresholdDb) &&
           (i + 1 >= numSegs ||
            peakHoldDb < segments[static_cast<size_t>(i + 1)].thresholdDb);
     }
@@ -254,8 +253,8 @@ void LedMeter::paint(juce::Graphics &g) {
     if (seg.isMajor) {
       const float labelX = 2.0f;
       const float labelW = stripBounds.getX() - labelX - 2.0f;
-      const auto labelRect = juce::Rectangle<float>(
-          labelX, y - 1.0f, labelW, segmentHeight + 2.0f);
+      const auto labelRect = juce::Rectangle<float>(labelX, y - 1.0f, labelW,
+                                                    segmentHeight + 2.0f);
 
       g.setColour(juce::Colour(C::labelText).withAlpha(0.6f));
       g.setFont(juce::Font(9.0f, juce::Font::plain));

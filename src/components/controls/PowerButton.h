@@ -31,7 +31,8 @@ public:
   /** Set the callback invoked when the toggle state changes. */
   void setOnClick(std::function<void()> fn) { toggle.onClick = std::move(fn); }
 
-  /** Customise colours. Call before the component is shown, or call repaint() after. */
+  /** Customise colours. Call before the component is shown, or call repaint()
+   * after. */
   void setOnColour(juce::Colour c) {
     onColour = c;
     rebuildIcon();
@@ -98,11 +99,12 @@ private:
       // Icon
       if (owner->iconDrawable != nullptr) {
         // Bypass is ON (toggled) = gray, bypass OFF (active) = blue
-        auto iconColour = isOn ? owner->offColour.withAlpha(0.5f) : owner->onColour;
+        auto iconColour =
+            isOn ? owner->offColour.withAlpha(0.5f) : owner->onColour;
         owner->iconDrawable->replaceColour(juce::Colours::black, iconColour);
 
-        owner->iconDrawable->drawWithin(g, bounds,
-                                         juce::RectanglePlacement::centred, 1.0f);
+        owner->iconDrawable->drawWithin(
+            g, bounds, juce::RectanglePlacement::centred, 1.0f);
 
         // Reset to black so next paint picks up the right replacement
         owner->iconDrawable->replaceColour(iconColour, juce::Colours::black);

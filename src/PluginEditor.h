@@ -10,9 +10,8 @@
 #include "ui/PluginLookAndFeel.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 
-class ScomeotropeAudioProcessorEditor : public juce::AudioProcessorEditor
-, private juce::Timer
-{
+class ScomeotropeAudioProcessorEditor : public juce::AudioProcessorEditor,
+                                        private juce::Timer {
 public:
   ScomeotropeAudioProcessorEditor(ScomeotropeAudioProcessor &);
   ~ScomeotropeAudioProcessorEditor() override;

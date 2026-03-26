@@ -10,7 +10,8 @@ ScomeotropeAudioProcessorEditor::ScomeotropeAudioProcessorEditor(
     : AudioProcessorEditor(&p), audioProcessor(p),
       // --- Dynamics knobs ---
       strengthKnob(p.apvts, RuntimeParamIDs::compStrength, "STRENGTH"),
-      thresholdKnob(p.apvts, RuntimeParamIDs::compThreshold, "THRESHOLD", " dB"),
+      thresholdKnob(p.apvts, RuntimeParamIDs::compThreshold, "THRESHOLD",
+                    " dB"),
       kneeKnob(p.apvts, RuntimeParamIDs::compKnee, "KNEE", " dB"),
       attackKnob(p.apvts, RuntimeParamIDs::compAttack, "ATTACK", " s"),
       releaseKnob(p.apvts, RuntimeParamIDs::compRelease, "RELEASE", " s"),
@@ -110,7 +111,8 @@ ScomeotropeAudioProcessorEditor::ScomeotropeAudioProcessorEditor(
       refreshPresetControls();
   };
   topBar.onShowOptionsMenu = [this] { showOptionsMenu(); };
-  topBar.setActiveABSlot(audioProcessor.getActiveABSlot() == ScomeotropeAudioProcessor::ABSlot::A);
+  topBar.setActiveABSlot(audioProcessor.getActiveABSlot() ==
+                         ScomeotropeAudioProcessor::ABSlot::A);
   refreshPresetControls();
 
   setResizable(true, true);
@@ -136,23 +138,25 @@ void ScomeotropeAudioProcessorEditor::timerCallback() {
 void ScomeotropeAudioProcessorEditor::refreshPresetControls() {
   topBar.setPresetNames(audioProcessor.getAvailablePresetNames());
   topBar.setSelectedPresetName(audioProcessor.getDisplayedPresetName());
-  topBar.setActiveABSlot(audioProcessor.getActiveABSlot() == ScomeotropeAudioProcessor::ABSlot::A);
+  topBar.setActiveABSlot(audioProcessor.getActiveABSlot() ==
+                         ScomeotropeAudioProcessor::ABSlot::A);
 }
 
 void ScomeotropeAudioProcessorEditor::promptSavePreset() {
   auto dialog = std::make_unique<juce::AlertWindow>(
       "Save Preset", "Enter a preset name.", juce::AlertWindow::NoIcon);
-  dialog->addTextEditor("presetName", audioProcessor.getActivePresetName(), "Preset name");
+  dialog->addTextEditor("presetName", audioProcessor.getActivePresetName(),
+                        "Preset name");
   dialog->addButton("Save", 1);
   dialog->addButton("Cancel", 0);
 
   auto *dialogPtr = dialog.release();
   dialogPtr->enterModalState(
-      true,
-      juce::ModalCallbackFunction::create([this, dialogPtr](int result) {
+      true, juce::ModalCallbackFunction::create([this, dialogPtr](int result) {
         std::unique_ptr<juce::AlertWindow> owner(dialogPtr);
         if (result == 1 &&
-            audioProcessor.saveUserPreset(dialogPtr->getTextEditorContents("presetName").trim()))
+            audioProcessor.saveUserPreset(
+                dialogPtr->getTextEditorContents("presetName").trim()))
           refreshPresetControls();
       }),
       true);
@@ -166,14 +170,14 @@ void ScomeotropeAudioProcessorEditor::showOptionsMenu() {
   menu.addItem(3, "Clear A/B", audioProcessor.hasDistinctABState());
   menu.addSeparator();
   menu.addItem(4, "Save Preset...");
-  menu.addItem(5,
-               "Delete Current Preset",
+  menu.addItem(5, "Delete Current Preset",
                !audioProcessor.getActivePresetName().isEmpty() &&
                    !audioProcessor.isActivePresetFactory());
   menu.addItem(6, "Reveal Presets Folder");
 
   menu.showMenuAsync(
-      juce::PopupMenu::Options().withTargetComponent(topBar.getOptionsTargetComponent()),
+      juce::PopupMenu::Options().withTargetComponent(
+          topBar.getOptionsTargetComponent()),
       [this](int result) {
         if (result == 1)
           audioProcessor.copyABSlot(ScomeotropeAudioProcessor::ABSlot::A,
@@ -230,7 +234,8 @@ void ScomeotropeAudioProcessorEditor::paint(juce::Graphics &g) {
   const int sectionGap = 8;
 
   // --- Top row: DYNAMICS ---
-  const int topRowHeight = juce::jlimit(260, 400, (bounds.getHeight() * 55) / 100);
+  const int topRowHeight =
+      juce::jlimit(260, 400, (bounds.getHeight() * 55) / 100);
   auto topRow = bounds.removeFromTop(topRowHeight);
   bounds.removeFromTop(sectionGap);
 
@@ -259,7 +264,8 @@ void ScomeotropeAudioProcessorEditor::resized() {
   const int titleHeight = 24;
 
   // --- Top row: DYNAMICS ---
-  const int topRowHeight = juce::jlimit(260, 400, (bounds.getHeight() * 55) / 100);
+  const int topRowHeight =
+      juce::jlimit(260, 400, (bounds.getHeight() * 55) / 100);
   auto topRow = bounds.removeFromTop(topRowHeight);
   bounds.removeFromTop(sectionGap);
 
@@ -322,10 +328,12 @@ void ScomeotropeAudioProcessorEditor::resized() {
       const int hGap = 4;
       const int knobW = 110;
       const int totalKnobsW = knobW * 2 + hGap;
-      const int startX = knobRow.getX() + (knobRow.getWidth() - totalKnobsW) / 2;
+      const int startX =
+          knobRow.getX() + (knobRow.getWidth() - totalKnobsW) / 2;
 
       compMixKnob.setBounds(startX, knobRow.getY(), knobW, knobRow.getHeight());
-      makeupKnob.setBounds(startX + knobW + hGap, knobRow.getY(), knobW, knobRow.getHeight());
+      makeupKnob.setBounds(startX + knobW + hGap, knobRow.getY(), knobW,
+                           knobRow.getHeight());
     }
   }
 
@@ -345,8 +353,7 @@ void ScomeotropeAudioProcessorEditor::resized() {
       const int btnSize = 10;
       vibratoBypassButton.setBounds(
           machineDecaySection.getRight() - sectionPadding - btnSize,
-          machineDecaySection.getY() + sectionPadding,
-          btnSize, btnSize);
+          machineDecaySection.getY() + sectionPadding, btnSize, btnSize);
     }
 
     auto area = machineDecaySection.reduced(sectionPadding);
@@ -357,8 +364,8 @@ void ScomeotropeAudioProcessorEditor::resized() {
       const int numKnobs = 3;
       const int maxKnobW = 100;
       const int hGap = 16;
-      const int knobW = juce::jmin(maxKnobW,
-                                    (area.getWidth() - hGap * (numKnobs - 1)) / numKnobs);
+      const int knobW = juce::jmin(
+          maxKnobW, (area.getWidth() - hGap * (numKnobs - 1)) / numKnobs);
       const int totalKnobsW = knobW * numKnobs + hGap * (numKnobs - 1);
       auto centred = area.withSizeKeepingCentre(totalKnobsW, area.getHeight());
 
@@ -378,8 +385,8 @@ void ScomeotropeAudioProcessorEditor::resized() {
     const int numKnobs = 3;
     const int maxKnobW = 100;
     const int hGap = 16;
-    const int knobW = juce::jmin(maxKnobW,
-                                  (area.getWidth() - hGap * (numKnobs - 1)) / numKnobs);
+    const int knobW = juce::jmin(
+        maxKnobW, (area.getWidth() - hGap * (numKnobs - 1)) / numKnobs);
     const int totalKnobsW = knobW * numKnobs + hGap * (numKnobs - 1);
     auto centred = area.withSizeKeepingCentre(totalKnobsW, area.getHeight());
 

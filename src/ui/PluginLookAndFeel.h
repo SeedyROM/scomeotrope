@@ -9,18 +9,11 @@ public:
   PluginLookAndFeel();
   ~PluginLookAndFeel() override = default;
 
-  void drawRotarySlider(juce::Graphics &g,
-                        int x,
-                        int y,
-                        int width,
-                        int height,
-                        float sliderPosProportional,
-                        float rotaryStartAngle,
-                        float rotaryEndAngle,
-                        juce::Slider &slider) override;
+  void drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height,
+                        float sliderPosProportional, float rotaryStartAngle,
+                        float rotaryEndAngle, juce::Slider &slider) override;
 
-  void drawToggleButton(juce::Graphics &g,
-                        juce::ToggleButton &button,
+  void drawToggleButton(juce::Graphics &g, juce::ToggleButton &button,
                         bool shouldDrawButtonAsHighlighted,
                         bool shouldDrawButtonAsDown) override;
 
@@ -28,25 +21,18 @@ public:
   juce::Label *createSliderTextBox(juce::Slider &slider) override;
   juce::Slider::SliderLayout getSliderLayout(juce::Slider &slider) override;
 
-  void drawButtonBackground(juce::Graphics &g,
-                            juce::Button &button,
+  void drawButtonBackground(juce::Graphics &g, juce::Button &button,
                             const juce::Colour &backgroundColour,
                             bool shouldDrawButtonAsHighlighted,
                             bool shouldDrawButtonAsDown) override;
-  void drawButtonText(juce::Graphics &g,
-                      juce::TextButton &button,
+  void drawButtonText(juce::Graphics &g, juce::TextButton &button,
                       bool shouldDrawButtonAsHighlighted,
                       bool shouldDrawButtonAsDown) override;
-  void drawComboBox(juce::Graphics &g,
-                    int width,
-                    int height,
-                    bool isButtonDown,
-                    int buttonX,
-                    int buttonY,
-                    int buttonW,
-                    int buttonH,
+  void drawComboBox(juce::Graphics &g, int width, int height, bool isButtonDown,
+                    int buttonX, int buttonY, int buttonW, int buttonH,
                     juce::ComboBox &box) override;
-  juce::Font getTextButtonFont(juce::TextButton &button, int buttonHeight) override;
+  juce::Font getTextButtonFont(juce::TextButton &button,
+                               int buttonHeight) override;
   juce::Font getComboBoxFont(juce::ComboBox &box) override;
 
 private:

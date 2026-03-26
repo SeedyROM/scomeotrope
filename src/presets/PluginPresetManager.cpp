@@ -14,11 +14,12 @@ bool hasCachedFactoryPresets = false;
 bool hasCachedAvailablePresets = false;
 bool userPresetListDirty = true;
 
-juce::ValueTree createPresetState(const juce::ValueTree& referenceState,
-                                  std::initializer_list<std::pair<const char*, float>> values) {
+juce::ValueTree createPresetState(
+    const juce::ValueTree &referenceState,
+    std::initializer_list<std::pair<const char *, float>> values) {
   auto state = referenceState.createCopy();
 
-  auto setParam = [&state](const juce::String& paramID, float value) {
+  auto setParam = [&state](const juce::String &paramID, float value) {
     for (int i = 0; i < state.getNumChildren(); ++i) {
       auto child = state.getChild(i);
       if (child.hasProperty("id") && child["id"].toString() == paramID) {
@@ -28,32 +29,35 @@ juce::ValueTree createPresetState(const juce::ValueTree& referenceState,
     }
   };
 
-  for (const auto& [paramID, value] : values)
+  for (const auto &[paramID, value] : values)
     setParam(paramID, value);
 
   return state;
 }
 
 std::vector<PluginPresetManager::PresetInfo>
-createFactoryPresets(const juce::ValueTree& referenceState, const juce::Identifier& pluginStateType) {
+createFactoryPresets(const juce::ValueTree &referenceState,
+                     const juce::Identifier &pluginStateType) {
   juce::ignoreUnused(pluginStateType);
 
   // No factory presets by default. Add your own here, e.g.:
-  // {"MyPreset", true, {}, createPresetState(referenceState, {{"param", 0.5f}})},
+  // {"MyPreset", true, {}, createPresetState(referenceState, {{"param",
+  // 0.5f}})},
   juce::ignoreUnused(referenceState);
   return {};
 }
 
-PluginPresetManager::PresetInfo* findPresetByName(std::vector<PluginPresetManager::PresetInfo>& presets,
-                                                   const juce::String& presetName) {
-  for (auto& preset : presets)
+PluginPresetManager::PresetInfo *
+findPresetByName(std::vector<PluginPresetManager::PresetInfo> &presets,
+                 const juce::String &presetName) {
+  for (auto &preset : presets)
     if (preset.name == presetName)
       return &preset;
 
   return nullptr;
 }
 
-juce::ValueTree loadWrappedStateFromFile(const juce::File& file) {
+juce::ValueTree loadWrappedStateFromFile(const juce::File &file) {
   if (!file.existsAsFile())
     return {};
 
@@ -62,16 +66,17 @@ juce::ValueTree loadWrappedStateFromFile(const juce::File& file) {
 }
 
 juce::File getPresetDirectoryForCache() {
-  auto directory = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
-                       .getChildFile("SeedyROM")
-                       .getChildFile("Scomeotrope")
-                       .getChildFile("Presets");
+  auto directory =
+      juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
+          .getChildFile("SeedyROM")
+          .getChildFile("Scomeotrope")
+          .getChildFile("Presets");
   directory.createDirectory();
   return directory;
 }
 
-bool shouldRebuildFactoryPresets(const juce::ValueTree& referenceState,
-                                 const juce::Identifier& pluginStateType) {
+bool shouldRebuildFactoryPresets(const juce::ValueTree &referenceState,
+                                 const juce::Identifier &pluginStateType) {
   if (!hasCachedFactoryPresets)
     return true;
 
@@ -81,8 +86,8 @@ bool shouldRebuildFactoryPresets(const juce::ValueTree& referenceState,
   return !cachedReferenceState.isEquivalentTo(referenceState);
 }
 
-void rebuildFactoryPresetCache(const juce::ValueTree& referenceState,
-                               const juce::Identifier& pluginStateType) {
+void rebuildFactoryPresetCache(const juce::ValueTree &referenceState,
+                               const juce::Identifier &pluginStateType) {
   cachedFactoryPresets = createFactoryPresets(referenceState, pluginStateType);
   cachedReferenceState = referenceState.createCopy();
   cachedPluginStateType = pluginStateType;
@@ -94,15 +99,16 @@ void rebuildAvailablePresetCache() {
   cachedAvailablePresets = cachedFactoryPresets;
 
   auto directory = getPresetDirectoryForCache();
-  auto files =
-      directory.findChildFiles(juce::File::findFiles, false, "*" + juce::String(presetFileExtension));
+  auto files = directory.findChildFiles(
+      juce::File::findFiles, false, "*" + juce::String(presetFileExtension));
 
-  for (const auto& file : files)
-    cachedAvailablePresets.push_back({file.getFileNameWithoutExtension(), false, file, {}});
+  for (const auto &file : files)
+    cachedAvailablePresets.push_back(
+        {file.getFileNameWithoutExtension(), false, file, {}});
 
-  std::sort(cachedAvailablePresets.begin(),
-            cachedAvailablePresets.end(),
-            [](const PluginPresetManager::PresetInfo& lhs, const PluginPresetManager::PresetInfo& rhs) {
+  std::sort(cachedAvailablePresets.begin(), cachedAvailablePresets.end(),
+            [](const PluginPresetManager::PresetInfo &lhs,
+               const PluginPresetManager::PresetInfo &rhs) {
               if (lhs.isFactory != rhs.isFactory)
                 return lhs.isFactory;
               return lhs.name < rhs.name;
@@ -112,7 +118,8 @@ void rebuildAvailablePresetCache() {
   userPresetListDirty = false;
 }
 
-void ensurePresetCaches(const juce::ValueTree& referenceState, const juce::Identifier& pluginStateType) {
+void ensurePresetCaches(const juce::ValueTree &referenceState,
+                        const juce::Identifier &pluginStateType) {
   if (shouldRebuildFactoryPresets(referenceState, pluginStateType))
     rebuildFactoryPresetCache(referenceState, pluginStateType);
 
@@ -123,25 +130,28 @@ void ensurePresetCaches(const juce::ValueTree& referenceState, const juce::Ident
 } // namespace
 
 juce::File PluginPresetManager::getPresetDirectory() {
-  auto directory = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
-                       .getChildFile("SeedyROM")
-                       .getChildFile("Scomeotrope")
-                       .getChildFile("Presets");
+  auto directory =
+      juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory)
+          .getChildFile("SeedyROM")
+          .getChildFile("Scomeotrope")
+          .getChildFile("Presets");
   directory.createDirectory();
   return directory;
 }
 
 std::vector<PluginPresetManager::PresetInfo>
-PluginPresetManager::getAvailablePresets(const juce::ValueTree& referenceState,
-                                         const juce::Identifier& pluginStateType) {
+PluginPresetManager::getAvailablePresets(
+    const juce::ValueTree &referenceState,
+    const juce::Identifier &pluginStateType) {
   const juce::ScopedLock lock(presetCacheLock);
   ensurePresetCaches(referenceState, pluginStateType);
   return cachedAvailablePresets;
 }
 
-juce::ValueTree PluginPresetManager::loadPresetState(const juce::String& presetName,
-                                                     const juce::ValueTree& referenceState,
-                                                     const juce::Identifier& pluginStateType) {
+juce::ValueTree
+PluginPresetManager::loadPresetState(const juce::String &presetName,
+                                     const juce::ValueTree &referenceState,
+                                     const juce::Identifier &pluginStateType) {
   std::vector<PluginPresetManager::PresetInfo> presets;
   {
     const juce::ScopedLock lock(presetCacheLock);
@@ -149,7 +159,7 @@ juce::ValueTree PluginPresetManager::loadPresetState(const juce::String& presetN
     presets = cachedAvailablePresets;
   }
 
-  auto* preset = findPresetByName(presets, presetName);
+  auto *preset = findPresetByName(presets, presetName);
   if (preset == nullptr)
     return {};
 
@@ -164,12 +174,13 @@ juce::ValueTree PluginPresetManager::loadPresetState(const juce::String& presetN
   return pluginState.isValid() ? pluginState.createCopy() : juce::ValueTree{};
 }
 
-bool PluginPresetManager::saveUserPreset(const juce::String& presetName,
-                                         const juce::ValueTree& wrappedState) {
+bool PluginPresetManager::saveUserPreset(const juce::String &presetName,
+                                         const juce::ValueTree &wrappedState) {
   if (presetName.trim().isEmpty() || !wrappedState.isValid())
     return false;
 
-  auto file = getPresetDirectory().getChildFile(presetName + presetFileExtension);
+  auto file =
+      getPresetDirectory().getChildFile(presetName + presetFileExtension);
   std::unique_ptr<juce::XmlElement> xml(wrappedState.createXml());
   const auto didSave = xml != nullptr && xml->writeTo(file);
   if (didSave) {
@@ -180,8 +191,9 @@ bool PluginPresetManager::saveUserPreset(const juce::String& presetName,
   return didSave;
 }
 
-bool PluginPresetManager::deleteUserPreset(const juce::String& presetName) {
-  auto file = getPresetDirectory().getChildFile(presetName + presetFileExtension);
+bool PluginPresetManager::deleteUserPreset(const juce::String &presetName) {
+  auto file =
+      getPresetDirectory().getChildFile(presetName + presetFileExtension);
   const auto didDelete = file.existsAsFile() && file.deleteFile();
   if (didDelete) {
     const juce::ScopedLock lock(presetCacheLock);
@@ -195,9 +207,9 @@ void PluginPresetManager::revealPresetDirectory() {
   getPresetDirectory().revealToUser();
 }
 
-bool PluginPresetManager::isFactoryPreset(const juce::String& presetName,
-                                          const juce::ValueTree& referenceState,
-                                          const juce::Identifier& pluginStateType) {
+bool PluginPresetManager::isFactoryPreset(
+    const juce::String &presetName, const juce::ValueTree &referenceState,
+    const juce::Identifier &pluginStateType) {
   std::vector<PluginPresetManager::PresetInfo> presets;
   {
     const juce::ScopedLock lock(presetCacheLock);
@@ -205,6 +217,6 @@ bool PluginPresetManager::isFactoryPreset(const juce::String& presetName,
     presets = cachedAvailablePresets;
   }
 
-  auto* preset = findPresetByName(presets, presetName);
+  auto *preset = findPresetByName(presets, presetName);
   return preset != nullptr && preset->isFactory;
 }

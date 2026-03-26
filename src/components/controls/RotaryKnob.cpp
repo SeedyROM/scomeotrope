@@ -17,13 +17,15 @@ juce::Label *findSliderValueLabel(juce::Slider &slider) {
 RotaryKnob::RotaryKnob(juce::AudioProcessorValueTreeState &apvts,
                        const juce::String &paramID,
                        const juce::String &labelText,
-                       const juce::String &suffix,
-                       bool showAsPercentage) {
+                       const juce::String &suffix, bool showAsPercentage) {
   slider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
   slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 68, 22);
-  slider.setColour(juce::Slider::textBoxTextColourId, juce::Colour(ScomeotropeColors::valueText));
-  slider.setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentBlack);
-  slider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+  slider.setColour(juce::Slider::textBoxTextColourId,
+                   juce::Colour(ScomeotropeColors::valueText));
+  slider.setColour(juce::Slider::textBoxBackgroundColourId,
+                   juce::Colours::transparentBlack);
+  slider.setColour(juce::Slider::textBoxOutlineColourId,
+                   juce::Colours::transparentBlack);
   slider.getProperties().set("pluginShowMeter", false);
 
   slider.onValueChange = [this] { refreshMeter(); };
@@ -32,12 +34,14 @@ RotaryKnob::RotaryKnob(juce::AudioProcessorValueTreeState &apvts,
 
   label.setText(labelText, juce::dontSendNotification);
   label.setJustificationType(juce::Justification::centred);
-  label.setColour(juce::Label::textColourId, juce::Colour(ScomeotropeColors::labelText));
+  label.setColour(juce::Label::textColourId,
+                  juce::Colour(ScomeotropeColors::labelText));
   label.setFont(juce::Font(12.0f, juce::Font::bold));
   addAndMakeVisible(label);
 
   attachment =
-      std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, paramID, slider);
+      std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
+          apvts, paramID, slider);
 
   valueLabel = findSliderValueLabel(slider);
 
@@ -51,7 +55,8 @@ RotaryKnob::RotaryKnob(juce::AudioProcessorValueTreeState &apvts,
     };
   } else if (suffix.isNotEmpty()) {
     auto existingTextFromValue = slider.textFromValueFunction;
-    slider.textFromValueFunction = [existingTextFromValue, suffix](double value) {
+    slider.textFromValueFunction = [existingTextFromValue,
+                                    suffix](double value) {
       if (suffix == " Hz" && value >= 1000.0) {
         const auto truncatedKhz = std::floor(value / 10.0) / 100.0;
         return juce::String(truncatedKhz, 2) + " kHz";
@@ -64,7 +69,10 @@ RotaryKnob::RotaryKnob(juce::AudioProcessorValueTreeState &apvts,
     slider.valueFromTextFunction = [suffix](const juce::String &text) {
       auto trimmed = text.trim();
       if (suffix == " Hz" && trimmed.endsWithIgnoreCase("kHz"))
-        return trimmed.upToLastOccurrenceOf("k", false, false).trim().getDoubleValue() * 1000.0;
+        return trimmed.upToLastOccurrenceOf("k", false, false)
+                   .trim()
+                   .getDoubleValue() *
+               1000.0;
 
       auto stripped = trimmed.trimCharactersAtEnd(suffix);
       return stripped.getDoubleValue();
@@ -89,11 +97,12 @@ void RotaryKnob::refreshMeter() {
   slider.getProperties().set("pluginMeterPeak", meterPeak);
 
   if (valueLabel != nullptr) {
-    const auto useActiveMeterColour = meterColourValueText && meterPeak > 1.0e-4f;
+    const auto useActiveMeterColour =
+        meterColourValueText && meterPeak > 1.0e-4f;
     valueLabel->setColour(juce::Label::textColourId,
                           useActiveMeterColour
-                               ? ScomeotropeColors::meterColourForPeak(meterPeak)
-                               : juce::Colour(ScomeotropeColors::valueText));
+                              ? ScomeotropeColors::meterColourForPeak(meterPeak)
+                              : juce::Colour(ScomeotropeColors::valueText));
     valueLabel->repaint();
   }
 

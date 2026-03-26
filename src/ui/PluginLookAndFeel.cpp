@@ -26,13 +26,17 @@ public:
     editor->setJustification(juce::Justification::centred);
     editor->setSelectAllWhenFocused(false);
     editor->applyColourToAllText(findColour(juce::TextEditor::textColourId));
-    editor->setColour(juce::TextEditor::backgroundColourId, juce::Colour(0xff222020));
-    editor->setColour(juce::TextEditor::outlineColourId, juce::Colour(ScomeotropeColors::panelBorder));
-    editor->setColour(juce::TextEditor::highlightColourId, juce::Colour(0x00000000));
+    editor->setColour(juce::TextEditor::backgroundColourId,
+                      juce::Colour(0xff222020));
+    editor->setColour(juce::TextEditor::outlineColourId,
+                      juce::Colour(ScomeotropeColors::panelBorder));
+    editor->setColour(juce::TextEditor::highlightColourId,
+                      juce::Colour(0x00000000));
     editor->setColour(juce::TextEditor::highlightedTextColourId,
                       findColour(juce::TextEditor::textColourId));
     editor->setCaretPosition(editor->getTotalNumChars());
-    editor->setHighlightedRegion({editor->getCaretPosition(), editor->getCaretPosition()});
+    editor->setHighlightedRegion(
+        {editor->getCaretPosition(), editor->getCaretPosition()});
   }
 };
 
@@ -42,15 +46,18 @@ PluginLookAndFeel::PluginLookAndFeel() {
   namespace C = ScomeotropeColors;
 
   setColour(juce::Slider::textBoxTextColourId, juce::Colour(C::valueText));
-  setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentBlack);
-  setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
+  setColour(juce::Slider::textBoxBackgroundColourId,
+            juce::Colours::transparentBlack);
+  setColour(juce::Slider::textBoxOutlineColourId,
+            juce::Colours::transparentBlack);
 
   setColour(juce::Label::textColourId, juce::Colour(C::labelText));
 
   setColour(juce::ToggleButton::textColourId, juce::Colour(C::labelText));
   setColour(juce::ToggleButton::tickColourId, juce::Colour(C::toggleOn));
 
-  setColour(juce::TextEditor::backgroundColourId, juce::Colours::transparentBlack);
+  setColour(juce::TextEditor::backgroundColourId,
+            juce::Colours::transparentBlack);
   setColour(juce::TextEditor::outlineColourId, juce::Colours::transparentBlack);
   setColour(juce::TextEditor::textColourId, juce::Colour(C::valueText));
 
@@ -62,47 +69,45 @@ PluginLookAndFeel::PluginLookAndFeel() {
   setColour(juce::PopupMenu::textColourId, juce::Colour(C::labelText));
   setColour(juce::PopupMenu::highlightedBackgroundColourId,
             juce::Colour(C::accentWarm).withAlpha(0.24f));
-  setColour(juce::PopupMenu::highlightedTextColourId, juce::Colour(C::accentBright));
+  setColour(juce::PopupMenu::highlightedTextColourId,
+            juce::Colour(C::accentBright));
 }
 
-void PluginLookAndFeel::drawRotarySlider(juce::Graphics &g,
-                                         int x,
-                                         int y,
-                                         int width,
-                                         int height,
-                                         float sliderPos,
+void PluginLookAndFeel::drawRotarySlider(juce::Graphics &g, int x, int y,
+                                         int width, int height, float sliderPos,
                                          float rotaryStartAngle,
                                          float rotaryEndAngle,
-                                          juce::Slider &slider) {
+                                         juce::Slider &slider) {
   namespace C = ScomeotropeColors;
 
-  const float diameter = (static_cast<float>(juce::jmin(width, height)) - 10.0f) * 0.82f;
+  const float diameter =
+      (static_cast<float>(juce::jmin(width, height)) - 10.0f) * 0.82f;
   const float radius = diameter * 0.5f;
-  const float centreX = static_cast<float>(x) + static_cast<float>(width) * 0.5f;
-  const float centreY = static_cast<float>(y) + static_cast<float>(height) * 0.5f;
+  const float centreX =
+      static_cast<float>(x) + static_cast<float>(width) * 0.5f;
+  const float centreY =
+      static_cast<float>(y) + static_cast<float>(height) * 0.5f;
   const float rx = centreX - radius;
   const float ry = centreY - radius;
 
-  const float angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
+  const float angle =
+      rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
-  const auto meterPeak = static_cast<float>(slider.getProperties()["pluginMeterPeak"]);
-  const auto showMeter = static_cast<bool>(slider.getProperties()["pluginShowMeter"]);
+  const auto meterPeak =
+      static_cast<float>(slider.getProperties()["pluginMeterPeak"]);
+  const auto showMeter =
+      static_cast<bool>(slider.getProperties()["pluginShowMeter"]);
   const auto meterPos = ScomeotropeColors::peakToMeterNormalised(meterPeak);
-  const auto meterAngle = rotaryStartAngle + meterPos * (rotaryEndAngle - rotaryStartAngle);
+  const auto meterAngle =
+      rotaryStartAngle + meterPos * (rotaryEndAngle - rotaryStartAngle);
 
   if (showMeter) {
     const float meterArcRadius = radius + 10.0f;
     const float meterArcThickness = 2.5f;
 
     juce::Path meterArcBg;
-    meterArcBg.addCentredArc(centreX,
-                             centreY,
-                             meterArcRadius,
-                             meterArcRadius,
-                             0.0f,
-                             rotaryStartAngle,
-                             rotaryEndAngle,
-                             true);
+    meterArcBg.addCentredArc(centreX, centreY, meterArcRadius, meterArcRadius,
+                             0.0f, rotaryStartAngle, rotaryEndAngle, true);
     g.setColour(juce::Colour(C::knobTrackBg).brighter(0.1f));
     g.strokePath(meterArcBg,
                  juce::PathStrokeType(meterArcThickness,
@@ -111,14 +116,8 @@ void PluginLookAndFeel::drawRotarySlider(juce::Graphics &g,
 
     if (meterPos > 0.0f) {
       juce::Path meterArc;
-      meterArc.addCentredArc(centreX,
-                             centreY,
-                             meterArcRadius,
-                             meterArcRadius,
-                             0.0f,
-                             rotaryStartAngle,
-                             meterAngle,
-                             true);
+      meterArc.addCentredArc(centreX, centreY, meterArcRadius, meterArcRadius,
+                             0.0f, rotaryStartAngle, meterAngle, true);
       g.setColour(ScomeotropeColors::meterColourForPeak(meterPeak));
       g.strokePath(meterArc,
                    juce::PathStrokeType(meterArcThickness,
@@ -131,27 +130,25 @@ void PluginLookAndFeel::drawRotarySlider(juce::Graphics &g,
   const float arcThickness = 3.0f;
 
   juce::Path arcBg;
-  arcBg.addCentredArc(centreX, centreY, arcRadius, arcRadius, 0.0f, rotaryStartAngle, rotaryEndAngle, true);
+  arcBg.addCentredArc(centreX, centreY, arcRadius, arcRadius, 0.0f,
+                      rotaryStartAngle, rotaryEndAngle, true);
   g.setColour(juce::Colour(C::knobTrackBg));
   g.strokePath(arcBg,
-               juce::PathStrokeType(
-                   arcThickness, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+               juce::PathStrokeType(arcThickness, juce::PathStrokeType::curved,
+                                    juce::PathStrokeType::rounded));
 
   if (sliderPos > 0.0f) {
     juce::Path arcFill;
-    arcFill.addCentredArc(centreX, centreY, arcRadius, arcRadius, 0.0f, rotaryStartAngle, angle, true);
+    arcFill.addCentredArc(centreX, centreY, arcRadius, arcRadius, 0.0f,
+                          rotaryStartAngle, angle, true);
 
-    juce::ColourGradient arcGrad(juce::Colour(C::knobArc),
-                                 centreX - arcRadius,
-                                 centreY,
-                                 juce::Colour(C::knobArcBright),
-                                 centreX + arcRadius,
-                                 centreY,
-                                 false);
+    juce::ColourGradient arcGrad(juce::Colour(C::knobArc), centreX - arcRadius,
+                                 centreY, juce::Colour(C::knobArcBright),
+                                 centreX + arcRadius, centreY, false);
     g.setGradientFill(arcGrad);
-    g.strokePath(arcFill,
-                 juce::PathStrokeType(
-                     arcThickness, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+    g.strokePath(arcFill, juce::PathStrokeType(arcThickness,
+                                               juce::PathStrokeType::curved,
+                                               juce::PathStrokeType::rounded));
   }
 
   {
@@ -162,13 +159,9 @@ void PluginLookAndFeel::drawRotarySlider(juce::Graphics &g,
   }
 
   {
-    juce::ColourGradient bodyGrad(juce::Colour(C::knobBodyLight),
-                                  centreX,
-                                  ry,
-                                  juce::Colour(C::knobBody),
-                                  centreX,
-                                  ry + diameter,
-                                  false);
+    juce::ColourGradient bodyGrad(juce::Colour(C::knobBodyLight), centreX, ry,
+                                  juce::Colour(C::knobBody), centreX,
+                                  ry + diameter, false);
     g.setGradientFill(bodyGrad);
     g.fillEllipse(rx, ry, diameter, diameter);
   }
@@ -179,17 +172,19 @@ void PluginLookAndFeel::drawRotarySlider(juce::Graphics &g,
   {
     const float inset = 2.0f;
     g.setColour(juce::Colour(0x18ffffff));
-    g.drawEllipse(rx + inset, ry + inset, diameter - inset * 2.0f, diameter - inset * 2.0f, 0.8f);
+    g.drawEllipse(rx + inset, ry + inset, diameter - inset * 2.0f,
+                  diameter - inset * 2.0f, 0.8f);
   }
 
   {
     juce::Path pointer;
     const float pointerLength = radius * 0.58f;
     const float pointerThickness = 2.5f;
-    pointer.addRoundedRectangle(
-        -pointerThickness * 0.5f, -radius + 6.0f, pointerThickness, pointerLength, 1.0f);
+    pointer.addRoundedRectangle(-pointerThickness * 0.5f, -radius + 6.0f,
+                                pointerThickness, pointerLength, 1.0f);
 
-    pointer.applyTransform(juce::AffineTransform::rotation(angle).translated(centreX, centreY));
+    pointer.applyTransform(
+        juce::AffineTransform::rotation(angle).translated(centreX, centreY));
 
     g.setColour(juce::Colour(C::knobPointer));
     g.fillPath(pointer);
@@ -198,7 +193,8 @@ void PluginLookAndFeel::drawRotarySlider(juce::Graphics &g,
   {
     const float dotRadius = 2.5f;
     g.setColour(juce::Colour(C::knobPointer).withAlpha(0.6f));
-    g.fillEllipse(centreX - dotRadius, centreY - dotRadius, dotRadius * 2.0f, dotRadius * 2.0f);
+    g.fillEllipse(centreX - dotRadius, centreY - dotRadius, dotRadius * 2.0f,
+                  dotRadius * 2.0f);
   }
 }
 
@@ -255,7 +251,8 @@ void PluginLookAndFeel::drawToggleButton(juce::Graphics &g,
     g.fillRoundedRectangle(glowBounds, cornerRadius + 3.0f);
   }
 
-  g.setColour(isOn ? juce::Colour(C::toggleOn).withAlpha(0.3f) : juce::Colour(C::toggleOff));
+  g.setColour(isOn ? juce::Colour(C::toggleOn).withAlpha(0.3f)
+                   : juce::Colour(C::toggleOff));
   g.fillRoundedRectangle(bounds, cornerRadius);
 
   g.setColour(isOn ? juce::Colour(C::toggleOn) : juce::Colour(C::panelBorder));
@@ -289,15 +286,16 @@ void PluginLookAndFeel::drawLabel(juce::Graphics &g, juce::Label &label) {
     const auto alpha = label.isEnabled() ? 1.0f : 0.5f;
     const auto font = getLabelFont(label);
 
-    g.setColour(label.findColour(juce::Label::textColourId).withMultipliedAlpha(alpha));
+    g.setColour(
+        label.findColour(juce::Label::textColourId).withMultipliedAlpha(alpha));
     g.setFont(font);
 
-    auto textArea = getLabelBorderSize(label).subtractedFrom(label.getLocalBounds());
-    g.drawFittedText(label.getText(),
-                     textArea,
-                     label.getJustificationType(),
-                     juce::jmax(1, (int)(textArea.getHeight() / font.getHeight())),
-                     label.getMinimumHorizontalScale());
+    auto textArea =
+        getLabelBorderSize(label).subtractedFrom(label.getLocalBounds());
+    g.drawFittedText(
+        label.getText(), textArea, label.getJustificationType(),
+        juce::jmax(1, (int)(textArea.getHeight() / font.getHeight())),
+        label.getMinimumHorizontalScale());
   }
 }
 
@@ -309,20 +307,28 @@ juce::Label *PluginLookAndFeel::createSliderTextBox(juce::Slider &slider) {
   label->setEditable(false, true, false);
   label->setBorderSize(juce::BorderSize<int>(0));
 
-  label->setColour(juce::Label::textColourId, juce::Colour(ScomeotropeColors::valueText));
-  label->setColour(juce::Label::backgroundColourId, juce::Colours::transparentBlack);
-  label->setColour(juce::Label::outlineColourId, juce::Colours::transparentBlack);
-  label->setColour(juce::TextEditor::backgroundColourId, juce::Colour(0xff222020));
-  label->setColour(juce::TextEditor::outlineColourId, juce::Colour(ScomeotropeColors::panelBorder));
-  label->setColour(juce::TextEditor::highlightColourId, juce::Colour(0x00000000));
+  label->setColour(juce::Label::textColourId,
+                   juce::Colour(ScomeotropeColors::valueText));
+  label->setColour(juce::Label::backgroundColourId,
+                   juce::Colours::transparentBlack);
+  label->setColour(juce::Label::outlineColourId,
+                   juce::Colours::transparentBlack);
+  label->setColour(juce::TextEditor::backgroundColourId,
+                   juce::Colour(0xff222020));
+  label->setColour(juce::TextEditor::outlineColourId,
+                   juce::Colour(ScomeotropeColors::panelBorder));
+  label->setColour(juce::TextEditor::highlightColourId,
+                   juce::Colour(0x00000000));
   label->setColour(juce::TextEditor::highlightedTextColourId,
                    juce::Colour(ScomeotropeColors::valueText));
-  label->setColour(juce::TextEditor::textColourId, juce::Colour(ScomeotropeColors::valueText));
+  label->setColour(juce::TextEditor::textColourId,
+                   juce::Colour(ScomeotropeColors::valueText));
 
   return label;
 }
 
-juce::Slider::SliderLayout PluginLookAndFeel::getSliderLayout(juce::Slider &slider) {
+juce::Slider::SliderLayout
+PluginLookAndFeel::getSliderLayout(juce::Slider &slider) {
   auto layout = LookAndFeel_V4::getSliderLayout(slider);
 
   if (slider.isBar())
@@ -330,19 +336,19 @@ juce::Slider::SliderLayout PluginLookAndFeel::getSliderLayout(juce::Slider &slid
 
   auto bounds = slider.getLocalBounds();
   layout.sliderBounds = bounds.withTrimmedTop(6).withTrimmedBottom(28);
-  layout.textBoxBounds =
-      juce::Rectangle<int>(bounds.getX() + 8, bounds.getBottom() - 26, bounds.getWidth() - 16, 22);
+  layout.textBoxBounds = juce::Rectangle<int>(
+      bounds.getX() + 8, bounds.getBottom() - 26, bounds.getWidth() - 16, 22);
   return layout;
 }
 
-void PluginLookAndFeel::drawButtonBackground(juce::Graphics &g,
-                                             juce::Button &button,
-                                             const juce::Colour &backgroundColour,
-                                             bool shouldDrawButtonAsHighlighted,
-                                             bool shouldDrawButtonAsDown) {
+void PluginLookAndFeel::drawButtonBackground(
+    juce::Graphics &g, juce::Button &button,
+    const juce::Colour &backgroundColour, bool shouldDrawButtonAsHighlighted,
+    bool shouldDrawButtonAsDown) {
   if (!isTopBarButton(button)) {
-    LookAndFeel_V4::drawButtonBackground(
-        g, button, backgroundColour, shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
+    LookAndFeel_V4::drawButtonBackground(g, button, backgroundColour,
+                                         shouldDrawButtonAsHighlighted,
+                                         shouldDrawButtonAsDown);
     return;
   }
 
@@ -355,13 +361,10 @@ void PluginLookAndFeel::drawButtonBackground(juce::Graphics &g,
   juce::ColourGradient fillGradient(
       isPressed ? juce::Colour(C::accentWarm).withAlpha(0.26f)
                 : juce::Colour(C::panelBg).brighter(0.09f),
-      0.0f,
-      bounds.getY(),
+      0.0f, bounds.getY(),
       isPressed ? juce::Colour(C::accentWarm).withAlpha(0.14f)
                 : juce::Colour(C::panelBg).brighter(0.02f),
-      0.0f,
-      bounds.getBottom(),
-      false);
+      0.0f, bounds.getBottom(), false);
   g.setGradientFill(fillGradient);
   g.fillRoundedRectangle(bounds, cornerSize);
 
@@ -384,64 +387,64 @@ void PluginLookAndFeel::drawButtonText(juce::Graphics &g,
                                        bool shouldDrawButtonAsHighlighted,
                                        bool shouldDrawButtonAsDown) {
   if (!isTopBarButton(button)) {
-    LookAndFeel_V4::drawButtonText(g, button, shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
+    LookAndFeel_V4::drawButtonText(g, button, shouldDrawButtonAsHighlighted,
+                                   shouldDrawButtonAsDown);
     return;
   }
 
   const bool isOn = button.getToggleState() || shouldDrawButtonAsDown;
-  auto textColour =
-      isOn ? juce::Colour(ScomeotropeColors::accentBright) : juce::Colour(ScomeotropeColors::labelText);
+  auto textColour = isOn ? juce::Colour(ScomeotropeColors::accentBright)
+                         : juce::Colour(ScomeotropeColors::labelText);
 
   if (shouldDrawButtonAsHighlighted && !isOn)
     textColour = textColour.brighter(0.15f);
 
   g.setColour(textColour);
   g.setFont(getTextButtonFont(button, button.getHeight()));
-  g.drawFittedText(button.getButtonText(), button.getLocalBounds().reduced(2, 0), juce::Justification::centred, 1);
+  g.drawFittedText(button.getButtonText(),
+                   button.getLocalBounds().reduced(2, 0),
+                   juce::Justification::centred, 1);
 }
 
-void PluginLookAndFeel::drawComboBox(juce::Graphics &g,
-                                     int width,
-                                     int height,
-                                     bool isButtonDown,
-                                     int buttonX,
-                                     int buttonY,
-                                     int buttonW,
-                                     int buttonH,
+void PluginLookAndFeel::drawComboBox(juce::Graphics &g, int width, int height,
+                                     bool isButtonDown, int buttonX,
+                                     int buttonY, int buttonW, int buttonH,
                                      juce::ComboBox &box) {
   if (!isTopBarPreset(box)) {
-    LookAndFeel_V4::drawComboBox(g, width, height, isButtonDown, buttonX, buttonY, buttonW, buttonH, box);
+    LookAndFeel_V4::drawComboBox(g, width, height, isButtonDown, buttonX,
+                                 buttonY, buttonW, buttonH, box);
     return;
   }
 
   namespace C = ScomeotropeColors;
-  auto bounds = juce::Rectangle<float>(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height)).reduced(0.5f);
+  auto bounds = juce::Rectangle<float>(0.0f, 0.0f, static_cast<float>(width),
+                                       static_cast<float>(height))
+                    .reduced(0.5f);
   const auto cornerSize = 4.5f;
   const bool highlighted = box.isMouseOver(true);
-  const bool active = isButtonDown || box.hasKeyboardFocus(true) || box.isPopupActive();
+  const bool active =
+      isButtonDown || box.hasKeyboardFocus(true) || box.isPopupActive();
 
-  juce::ColourGradient fillGradient(active ? juce::Colour(C::panelBg).brighter(0.15f)
-                                           : juce::Colour(C::panelBg).brighter(0.1f),
-                                    0.0f,
-                                    bounds.getY(),
-                                    juce::Colour(C::panelBg).brighter(0.03f),
-                                    0.0f,
-                                    bounds.getBottom(),
-                                    false);
+  juce::ColourGradient fillGradient(
+      active ? juce::Colour(C::panelBg).brighter(0.15f)
+             : juce::Colour(C::panelBg).brighter(0.1f),
+      0.0f, bounds.getY(), juce::Colour(C::panelBg).brighter(0.03f), 0.0f,
+      bounds.getBottom(), false);
   g.setGradientFill(fillGradient);
   g.fillRoundedRectangle(bounds, cornerSize);
 
-  g.setColour(active ? juce::Colour(C::accentWarm)
-                     : juce::Colour(C::panelBorder).brighter(highlighted ? 0.25f : 0.1f));
+  g.setColour(
+      active
+          ? juce::Colour(C::accentWarm)
+          : juce::Colour(C::panelBorder).brighter(highlighted ? 0.25f : 0.1f));
   g.drawRoundedRectangle(bounds, cornerSize, 1.0f);
 
-  auto arrowZone = juce::Rectangle<float>(static_cast<float>(buttonX),
-                                          static_cast<float>(buttonY),
-                                          static_cast<float>(buttonW),
-                                          static_cast<float>(buttonH));
+  auto arrowZone = juce::Rectangle<float>(
+      static_cast<float>(buttonX), static_cast<float>(buttonY),
+      static_cast<float>(buttonW), static_cast<float>(buttonH));
   g.setColour(juce::Colour(C::panelBorder).withAlpha(0.8f));
-  g.drawLine(
-      arrowZone.getX(), arrowZone.getY() + 3.0f, arrowZone.getX(), arrowZone.getBottom() - 3.0f, 1.0f);
+  g.drawLine(arrowZone.getX(), arrowZone.getY() + 3.0f, arrowZone.getX(),
+             arrowZone.getBottom() - 3.0f, 1.0f);
 
   juce::Path arrow;
   const auto arrowCentreX = arrowZone.getCentreX();
@@ -452,17 +455,19 @@ void PluginLookAndFeel::drawComboBox(juce::Graphics &g,
   arrow.lineTo(arrowCentreX, arrowCentreY + arrowHeight);
   arrow.lineTo(arrowCentreX + arrowHalfWidth, arrowCentreY - 1.0f);
 
-  g.setColour(active ? juce::Colour(C::accentBright) : juce::Colour(C::labelText));
-  g.strokePath(
-      arrow,
-      juce::PathStrokeType(1.6f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+  g.setColour(active ? juce::Colour(C::accentBright)
+                     : juce::Colour(C::labelText));
+  g.strokePath(arrow, juce::PathStrokeType(1.6f, juce::PathStrokeType::curved,
+                                           juce::PathStrokeType::rounded));
 }
 
-juce::Font PluginLookAndFeel::getTextButtonFont(juce::TextButton &button, int buttonHeight) {
+juce::Font PluginLookAndFeel::getTextButtonFont(juce::TextButton &button,
+                                                int buttonHeight) {
   if (button.getComponentID() == topBarButtonComponentId)
     return juce::Font(13.0f, juce::Font::bold);
 
-  return juce::Font(static_cast<float>(juce::jmax(10, buttonHeight - 12)), juce::Font::bold);
+  return juce::Font(static_cast<float>(juce::jmax(10, buttonHeight - 12)),
+                    juce::Font::bold);
 }
 
 juce::Font PluginLookAndFeel::getComboBoxFont(juce::ComboBox &box) {
