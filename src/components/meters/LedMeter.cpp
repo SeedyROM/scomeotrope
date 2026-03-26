@@ -226,7 +226,8 @@ void LedMeter::paint(juce::Graphics &g) {
       // Normal mode: light from bottom upward.
       isLit = (displayPeakDb > seg.thresholdDb);
       isPeakHold =
-          peakHoldEnabled && !isLit && (peakHoldDb >= seg.thresholdDb) &&
+          peakHoldEnabled && !isLit && (peakHoldDb >= -40.0f) &&
+          (peakHoldDb >= seg.thresholdDb) &&
           (i + 1 >= numSegs ||
            peakHoldDb < segments[static_cast<size_t>(i + 1)].thresholdDb);
     }
