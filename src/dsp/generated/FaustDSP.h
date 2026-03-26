@@ -956,12 +956,7 @@ struct ScomeotropeDSP {
 			}
 			/* Post code */
 			fRec20_idx_save = vsize;
-			/* Vectorizable loop 23 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec32[i] = 256.0f * (fRec4[(i + fRec4_idx) & 63] * ftbl0ScomeotropeDSPSIG0[std::max<int>(0, std::min<int>(int(65536.0f * fRec5[(i + fRec5_idx) & 63]), 65535))] + 1.0f);
-			}
-			/* Recursive loop 24 */
+			/* Recursive loop 23 */
 			/* Pre code */
 			fRec3_idx = (fRec3_idx + fRec3_idx_save) & 63;
 			/* Compute code */
@@ -971,112 +966,97 @@ struct ScomeotropeDSP {
 			}
 			/* Post code */
 			fRec3_idx_save = vsize;
-			/* Vectorizable loop 25 */
+			/* Vectorizable loop 24 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec8[i] = float(input0[i]) + fSlow3 * (std::min<float>(fRec10[(i + fRec10_idx) & 63], 1.0f) + 0.3f) * fZec7[i];
 			}
-			/* Vectorizable loop 26 */
+			/* Vectorizable loop 25 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec15[i] = float(input1[i]) + fSlow3 * fZec7[i] * (std::min<float>(fRec20[(i + fRec20_idx) & 63], 1.0f) + 0.3f);
 			}
+			/* Vectorizable loop 26 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec32[i] = 256.0f * (fRec4[(i + fRec4_idx) & 63] * ftbl0ScomeotropeDSPSIG0[std::max<int>(0, std::min<int>(int(65536.0f * fRec5[(i + fRec5_idx) & 63]), 65535))] + 1.0f);
+			}
 			/* Vectorizable loop 27 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec24[i] = 256.0f * (fSlow22 * ftbl0ScomeotropeDSPSIG0[std::max<int>(0, std::min<int>(int(65536.0f * fRec3[(i + fRec3_idx) & 63]), 65535))] + 1.0f);
-			}
-			/* Vectorizable loop 28 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec33[i] = fZec32[i] + -1.999995f;
-			}
-			/* Vectorizable loop 29 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec9[i] = 2e+01f * std::log10(std::max<float>(1.1754944e-38f, std::fabs(fZec8[i])));
 			}
-			/* Vectorizable loop 30 */
+			/* Vectorizable loop 28 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec16[i] = 2e+01f * std::log10(std::max<float>(1.1754944e-38f, std::fabs(fZec15[i])));
 			}
+			/* Vectorizable loop 29 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec33[i] = fZec32[i] + -1.999995f;
+			}
+			/* Vectorizable loop 30 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec24[i] = 256.0f * (fSlow22 * ftbl0ScomeotropeDSPSIG0[std::max<int>(0, std::min<int>(int(65536.0f * fRec3[(i + fRec3_idx) & 63]), 65535))] + 1.0f);
+			}
 			/* Vectorizable loop 31 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec25[i] = fZec24[i] + -1.999995f;
-			}
-			/* Vectorizable loop 32 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec34[i] = std::floor(fZec33[i]);
-			}
-			/* Vectorizable loop 33 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				iZec10[i] = (fZec9[i] > fSlow7) + (fZec9[i] > fSlow8);
 			}
-			/* Vectorizable loop 34 */
+			/* Vectorizable loop 32 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec11[i] = fZec9[i] - fSlow4;
 			}
-			/* Vectorizable loop 35 */
+			/* Vectorizable loop 33 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				iZec17[i] = (fZec16[i] > fSlow7) + (fZec16[i] > fSlow8);
 			}
-			/* Vectorizable loop 36 */
+			/* Vectorizable loop 34 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec18[i] = fZec16[i] - fSlow4;
 			}
+			/* Vectorizable loop 35 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec34[i] = std::floor(fZec33[i]);
+			}
+			/* Vectorizable loop 36 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec25[i] = fZec24[i] + -1.999995f;
+			}
 			/* Vectorizable loop 37 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec26[i] = std::floor(fZec25[i]);
-			}
-			/* Vectorizable loop 38 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec39[i] = fZec32[i] - fZec34[i];
-			}
-			/* Vectorizable loop 39 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec43[i] = fZec32[i] + (-1.0f - fZec34[i]);
-			}
-			/* Vectorizable loop 40 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec12[i] = std::max<float>(0.0f, ((iZec10[i] == 0) ? 0.0f : ((iZec10[i] == 1) ? fSlow9 * ScomeotropeDSP_faustpower2_f(fSlow6 + fZec11[i]) : fZec11[i])));
 			}
-			/* Vectorizable loop 41 */
+			/* Vectorizable loop 38 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec19[i] = std::max<float>(0.0f, ((iZec17[i] == 0) ? 0.0f : ((iZec17[i] == 1) ? fSlow9 * ScomeotropeDSP_faustpower2_f(fSlow6 + fZec18[i]) : fZec18[i])));
 			}
-			/* Vectorizable loop 42 */
+			/* Vectorizable loop 39 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				fZec31[i] = fZec24[i] - fZec26[i];
+				fZec39[i] = fZec32[i] - fZec34[i];
 			}
-			/* Vectorizable loop 43 */
+			/* Vectorizable loop 40 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				fZec38[i] = fZec32[i] + (-2.0f - fZec34[i]);
+				fZec43[i] = fZec32[i] + (-1.0f - fZec34[i]);
 			}
-			/* Vectorizable loop 44 */
+			/* Vectorizable loop 41 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				fZec44[i] = fZec39[i] * fZec43[i];
+				fZec26[i] = std::floor(fZec25[i]);
 			}
-			/* Vectorizable loop 45 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec58[i] = fZec24[i] + (-1.0f - fZec26[i]);
-			}
-			/* Recursive loop 46 */
+			/* Recursive loop 42 */
 			/* Pre code */
 			fRec18_idx = (fRec18_idx + fRec18_idx_save) & 63;
 			/* Compute code */
@@ -1086,7 +1066,7 @@ struct ScomeotropeDSP {
 			}
 			/* Post code */
 			fRec18_idx_save = vsize;
-			/* Recursive loop 47 */
+			/* Recursive loop 43 */
 			/* Pre code */
 			fRec19_idx = (fRec19_idx + fRec19_idx_save) & 63;
 			/* Compute code */
@@ -1096,32 +1076,32 @@ struct ScomeotropeDSP {
 			}
 			/* Post code */
 			fRec19_idx_save = vsize;
+			/* Vectorizable loop 44 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec31[i] = fZec24[i] - fZec26[i];
+			}
+			/* Vectorizable loop 45 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec38[i] = fZec32[i] + (-2.0f - fZec34[i]);
+			}
+			/* Vectorizable loop 46 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec44[i] = fZec39[i] * fZec43[i];
+			}
+			/* Vectorizable loop 47 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec58[i] = fZec24[i] + (-1.0f - fZec26[i]);
+			}
 			/* Vectorizable loop 48 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec30[i] = fZec24[i] + (-2.0f - fZec26[i]);
-			}
-			/* Vectorizable loop 49 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec37[i] = fZec32[i] + (-3.0f - fZec34[i]);
-			}
-			/* Vectorizable loop 50 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec46[i] = fZec44[i] * fZec38[i];
-			}
-			/* Vectorizable loop 51 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec59[i] = fZec31[i] * fZec58[i];
-			}
-			/* Vectorizable loop 52 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec21[i] = std::min<float>(fRec18[(i + fRec18_idx) & 63], fRec19[(i + fRec19_idx) & 63]);
 			}
-			/* Recursive loop 53 */
+			/* Recursive loop 49 */
 			/* Pre code */
 			fRec22_idx = (fRec22_idx + fRec22_idx_save) & 63;
 			/* Compute code */
@@ -1130,132 +1110,67 @@ struct ScomeotropeDSP {
 			}
 			/* Post code */
 			fRec22_idx_save = vsize;
+			/* Vectorizable loop 50 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec30[i] = fZec24[i] + (-2.0f - fZec26[i]);
+			}
+			/* Vectorizable loop 51 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec37[i] = fZec32[i] + (-3.0f - fZec34[i]);
+			}
+			/* Vectorizable loop 52 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec46[i] = fZec44[i] * fZec38[i];
+			}
+			/* Vectorizable loop 53 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec59[i] = fZec31[i] * fZec58[i];
+			}
 			/* Vectorizable loop 54 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec29[i] = fZec24[i] + (-3.0f - fZec26[i]);
-			}
-			/* Vectorizable loop 55 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec36[i] = fZec32[i] + (-4.0f - fZec34[i]);
-			}
-			/* Vectorizable loop 56 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				iZec40[i] = int(fZec33[i]);
-			}
-			/* Vectorizable loop 57 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec48[i] = fZec46[i] * fZec37[i];
-			}
-			/* Vectorizable loop 58 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec52[i] = fSlow23 * fRec22[(i + fRec22_idx) & 63];
-			}
-			/* Vectorizable loop 59 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec61[i] = fZec59[i] * fZec30[i];
-			}
-			/* Vectorizable loop 60 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec68[i] = fRec19[(i + fRec19_idx) & 63] + 0.888f * (fZec21[i] - fRec19[(i + fRec19_idx) & 63]);
-			}
-			/* Vectorizable loop 61 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec22[i] = fRec18[(i + fRec18_idx) & 63] + 0.888f * (fZec21[i] - fRec18[(i + fRec18_idx) & 63]);
 			}
-			/* Vectorizable loop 62 */
+			/* Vectorizable loop 55 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				fZec28[i] = fZec24[i] + (-4.0f - fZec26[i]);
+				fZec29[i] = fZec24[i] + (-3.0f - fZec26[i]);
 			}
-			/* Vectorizable loop 63 */
+			/* Vectorizable loop 56 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				fZec35[i] = fZec32[i] + (-5.0f - fZec34[i]);
+				fZec36[i] = fZec32[i] + (-4.0f - fZec34[i]);
 			}
-			/* Vectorizable loop 64 */
+			/* Vectorizable loop 57 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				iZec41[i] = std::min<int>(512, std::max<int>(0, iZec40[i] + 1));
+				iZec40[i] = int(fZec33[i]);
 			}
-			/* Vectorizable loop 65 */
+			/* Vectorizable loop 58 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				iZec42[i] = std::min<int>(512, std::max<int>(0, iZec40[i]));
+				fZec48[i] = fZec46[i] * fZec37[i];
 			}
-			/* Vectorizable loop 66 */
+			/* Vectorizable loop 59 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				iZec45[i] = std::min<int>(512, std::max<int>(0, iZec40[i] + 2));
+				fZec52[i] = fSlow23 * fRec22[(i + fRec22_idx) & 63];
 			}
-			/* Vectorizable loop 67 */
+			/* Vectorizable loop 60 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				iZec47[i] = std::min<int>(512, std::max<int>(0, iZec40[i] + 3));
+				fZec61[i] = fZec59[i] * fZec30[i];
 			}
-			/* Vectorizable loop 68 */
+			/* Vectorizable loop 61 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				iZec49[i] = std::min<int>(512, std::max<int>(0, iZec40[i] + 4));
+				fZec68[i] = fRec19[(i + fRec19_idx) & 63] + 0.888f * (fZec21[i] - fRec19[(i + fRec19_idx) & 63]);
 			}
-			/* Vectorizable loop 69 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec50[i] = fZec48[i] * fZec36[i];
-			}
-			/* Vectorizable loop 70 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				iZec51[i] = std::min<int>(512, std::max<int>(0, iZec40[i] + 5));
-			}
-			/* Vectorizable loop 71 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec53[i] = std::sin(fZec52[i]);
-			}
-			/* Vectorizable loop 72 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec54[i] = std::cos(fZec52[i]);
-			}
-			/* Vectorizable loop 73 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				iZec55[i] = int(fZec25[i]);
-			}
-			/* Vectorizable loop 74 */
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fZec63[i] = fZec61[i] * fZec29[i];
-			}
-			/* Recursive loop 75 */
-			/* Pre code */
-			fRec27_idx = (fRec27_idx + fRec27_idx_save) & 63;
-			fYec6_idx = (fYec6_idx + fYec6_idx_save) & 63;
-			fRec29_idx = (fRec29_idx + fRec29_idx_save) & 63;
-			fRec28_idx = (fRec28_idx + fRec28_idx_save) & 1023;
-			/* Compute code */
-			for (int i = 0; i < vsize; i = i + 1) {
-				fRec27[(i + fRec27_idx) & 63] = fConst1 * fRec27[(i + fRec27_idx - 1) & 63] + fConst2 * fRec28[(i + fRec28_idx - 1) & 1023];
-				fVbargraph1 = FAUSTFLOAT(fZec68[i]);
-				fZec69[i] = fSlow16 * fZec15[i] * (fSlow18 + fSlow19 * std::pow(1e+01f, 0.05f * fZec68[i])) - 0.3f * fRec27[(i + fRec27_idx - 1) & 63];
-				fYec6[(i + fYec6_idx) & 63] = (((1.15f * fZec69[i]) >= 0.0f) ? 1.15f * (fZec69[i] / (0.69f * fZec69[i] + 1.0f)) : 1.15f * (fZec69[i] / (1.0f - 0.1725f * fZec69[i])));
-				fRec29[(i + fRec29_idx) & 63] = 0.995f * fRec29[(i + fRec29_idx - 1) & 63] + 0.8695652f * (fYec6[(i + fYec6_idx) & 63] - fYec6[(i + fYec6_idx - 1) & 63]);
-				fRec28[(i + fRec28_idx) & 1023] = fRec29[(i + fRec29_idx) & 63];
-			}
-			/* Post code */
-			fYec6_idx_save = vsize;
-			fRec29_idx_save = vsize;
-			fRec27_idx_save = vsize;
-			fRec28_idx_save = vsize;
-			/* Recursive loop 76 */
+			/* Recursive loop 62 */
 			/* Pre code */
 			fRec7_idx = (fRec7_idx + fRec7_idx_save) & 63;
 			fYec3_idx = (fYec3_idx + fYec3_idx_save) & 63;
@@ -1275,12 +1190,92 @@ struct ScomeotropeDSP {
 			fRec9_idx_save = vsize;
 			fRec7_idx_save = vsize;
 			fRec8_idx_save = vsize;
-			/* Vectorizable loop 77 */
+			/* Vectorizable loop 63 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				fZec27[i] = fZec24[i] + (-5.0f - fZec26[i]);
+				fZec28[i] = fZec24[i] + (-4.0f - fZec26[i]);
 			}
-			/* Vectorizable loop 78 */
+			/* Vectorizable loop 64 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec35[i] = fZec32[i] + (-5.0f - fZec34[i]);
+			}
+			/* Vectorizable loop 65 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				iZec41[i] = std::min<int>(512, std::max<int>(0, iZec40[i] + 1));
+			}
+			/* Vectorizable loop 66 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				iZec42[i] = std::min<int>(512, std::max<int>(0, iZec40[i]));
+			}
+			/* Vectorizable loop 67 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				iZec45[i] = std::min<int>(512, std::max<int>(0, iZec40[i] + 2));
+			}
+			/* Vectorizable loop 68 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				iZec47[i] = std::min<int>(512, std::max<int>(0, iZec40[i] + 3));
+			}
+			/* Vectorizable loop 69 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				iZec49[i] = std::min<int>(512, std::max<int>(0, iZec40[i] + 4));
+			}
+			/* Vectorizable loop 70 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec50[i] = fZec48[i] * fZec36[i];
+			}
+			/* Vectorizable loop 71 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				iZec51[i] = std::min<int>(512, std::max<int>(0, iZec40[i] + 5));
+			}
+			/* Vectorizable loop 72 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec53[i] = std::sin(fZec52[i]);
+			}
+			/* Vectorizable loop 73 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec54[i] = std::cos(fZec52[i]);
+			}
+			/* Vectorizable loop 74 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				iZec55[i] = int(fZec25[i]);
+			}
+			/* Vectorizable loop 75 */
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fZec63[i] = fZec61[i] * fZec29[i];
+			}
+			/* Recursive loop 76 */
+			/* Pre code */
+			fRec27_idx = (fRec27_idx + fRec27_idx_save) & 63;
+			fYec6_idx = (fYec6_idx + fYec6_idx_save) & 63;
+			fRec29_idx = (fRec29_idx + fRec29_idx_save) & 63;
+			fRec28_idx = (fRec28_idx + fRec28_idx_save) & 1023;
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fRec27[(i + fRec27_idx) & 63] = fConst1 * fRec27[(i + fRec27_idx - 1) & 63] + fConst2 * fRec28[(i + fRec28_idx - 1) & 1023];
+				fVbargraph1 = FAUSTFLOAT(fZec68[i]);
+				fZec69[i] = fSlow16 * fZec15[i] * (fSlow18 + fSlow19 * std::pow(1e+01f, 0.05f * fZec68[i])) - 0.3f * fRec27[(i + fRec27_idx - 1) & 63];
+				fYec6[(i + fYec6_idx) & 63] = (((1.15f * fZec69[i]) >= 0.0f) ? 1.15f * (fZec69[i] / (0.69f * fZec69[i] + 1.0f)) : 1.15f * (fZec69[i] / (1.0f - 0.1725f * fZec69[i])));
+				fRec29[(i + fRec29_idx) & 63] = 0.995f * fRec29[(i + fRec29_idx - 1) & 63] + 0.8695652f * (fYec6[(i + fYec6_idx) & 63] - fYec6[(i + fYec6_idx - 1) & 63]);
+				fRec28[(i + fRec28_idx) & 1023] = fRec29[(i + fRec29_idx) & 63];
+			}
+			/* Post code */
+			fYec6_idx_save = vsize;
+			fRec29_idx_save = vsize;
+			fRec27_idx_save = vsize;
+			fRec28_idx_save = vsize;
+			/* Vectorizable loop 77 */
 			/* Pre code */
 			fYec4_idx = (fYec4_idx + fYec4_idx_save) & 511;
 			/* Compute code */
@@ -1289,42 +1284,42 @@ struct ScomeotropeDSP {
 			}
 			/* Post code */
 			fYec4_idx_save = vsize;
-			/* Vectorizable loop 79 */
+			/* Vectorizable loop 78 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				iZec56[i] = std::min<int>(512, std::max<int>(0, iZec55[i] + 1));
 			}
-			/* Vectorizable loop 80 */
+			/* Vectorizable loop 79 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				iZec57[i] = std::min<int>(512, std::max<int>(0, iZec55[i]));
 			}
-			/* Vectorizable loop 81 */
+			/* Vectorizable loop 80 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				iZec60[i] = std::min<int>(512, std::max<int>(0, iZec55[i] + 2));
 			}
-			/* Vectorizable loop 82 */
+			/* Vectorizable loop 81 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				iZec62[i] = std::min<int>(512, std::max<int>(0, iZec55[i] + 3));
 			}
-			/* Vectorizable loop 83 */
+			/* Vectorizable loop 82 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				iZec64[i] = std::min<int>(512, std::max<int>(0, iZec55[i] + 4));
 			}
-			/* Vectorizable loop 84 */
+			/* Vectorizable loop 83 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				fZec65[i] = fZec63[i] * fZec28[i];
 			}
-			/* Vectorizable loop 85 */
+			/* Vectorizable loop 84 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
 				iZec66[i] = std::min<int>(512, std::max<int>(0, iZec55[i] + 5));
 			}
-			/* Vectorizable loop 86 */
+			/* Vectorizable loop 85 */
 			/* Pre code */
 			fYec7_idx = (fYec7_idx + fYec7_idx_save) & 511;
 			/* Compute code */
@@ -1333,26 +1328,12 @@ struct ScomeotropeDSP {
 			}
 			/* Post code */
 			fYec7_idx_save = vsize;
-			/* Recursive loop 87 */
-			/* Pre code */
-			fRec24_idx = (fRec24_idx + fRec24_idx_save) & 63;
-			fYec8_idx = (fYec8_idx + fYec8_idx_save) & 63;
-			fRec26_idx = (fRec26_idx + fRec26_idx_save) & 63;
-			fRec25_idx = (fRec25_idx + fRec25_idx_save) & 63;
+			/* Vectorizable loop 86 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				fRec24[(i + fRec24_idx) & 63] = fConst1 * fRec24[(i + fRec24_idx - 1) & 63] + fConst2 * fRec25[(i + fRec25_idx - 1) & 63];
-				fZec70[i] = fSlow21 * (fZec27[i] * (fZec28[i] * (fZec29[i] * (fZec30[i] * (0.029462783f * fZec31[i] * fYec7[(i + fYec7_idx - iZec56[i]) & 511] - 0.0058925566f * fZec58[i] * fYec7[(i + fYec7_idx - iZec57[i]) & 511]) - 0.058925565f * fZec59[i] * fYec7[(i + fYec7_idx - iZec60[i]) & 511]) + 0.058925565f * fZec61[i] * fYec7[(i + fYec7_idx - iZec62[i]) & 511]) - 0.029462783f * fZec63[i] * fYec7[(i + fYec7_idx - iZec64[i]) & 511]) + 0.0058925566f * fZec65[i] * fYec7[(i + fYec7_idx - iZec66[i]) & 511]) - 0.3f * fRec24[(i + fRec24_idx - 1) & 63];
-				fYec8[(i + fYec8_idx) & 63] = (((1.15f * fZec70[i]) >= 0.0f) ? 1.15f * (fZec70[i] / (0.69f * fZec70[i] + 1.0f)) : 1.15f * (fZec70[i] / (1.0f - 0.1725f * fZec70[i])));
-				fRec26[(i + fRec26_idx) & 63] = 0.995f * fRec26[(i + fRec26_idx - 1) & 63] + 0.8695652f * (fYec8[(i + fYec8_idx) & 63] - fYec8[(i + fYec8_idx - 1) & 63]);
-				fRec25[(i + fRec25_idx) & 63] = fRec26[(i + fRec26_idx) & 63];
+				fZec27[i] = fZec24[i] + (-5.0f - fZec26[i]);
 			}
-			/* Post code */
-			fYec8_idx_save = vsize;
-			fRec26_idx_save = vsize;
-			fRec24_idx_save = vsize;
-			fRec25_idx_save = vsize;
-			/* Recursive loop 88 */
+			/* Recursive loop 87 */
 			/* Pre code */
 			fRec0_idx = (fRec0_idx + fRec0_idx_save) & 63;
 			fYec5_idx = (fYec5_idx + fYec5_idx_save) & 63;
@@ -1371,15 +1352,34 @@ struct ScomeotropeDSP {
 			fRec2_idx_save = vsize;
 			fRec0_idx_save = vsize;
 			fRec1_idx_save = vsize;
+			/* Recursive loop 88 */
+			/* Pre code */
+			fRec24_idx = (fRec24_idx + fRec24_idx_save) & 63;
+			fYec8_idx = (fYec8_idx + fYec8_idx_save) & 63;
+			fRec26_idx = (fRec26_idx + fRec26_idx_save) & 63;
+			fRec25_idx = (fRec25_idx + fRec25_idx_save) & 63;
+			/* Compute code */
+			for (int i = 0; i < vsize; i = i + 1) {
+				fRec24[(i + fRec24_idx) & 63] = fConst1 * fRec24[(i + fRec24_idx - 1) & 63] + fConst2 * fRec25[(i + fRec25_idx - 1) & 63];
+				fZec70[i] = fSlow21 * (fZec27[i] * (fZec28[i] * (fZec29[i] * (fZec30[i] * (0.029462783f * fZec31[i] * fYec7[(i + fYec7_idx - iZec56[i]) & 511] - 0.0058925566f * fZec58[i] * fYec7[(i + fYec7_idx - iZec57[i]) & 511]) - 0.058925565f * fZec59[i] * fYec7[(i + fYec7_idx - iZec60[i]) & 511]) + 0.058925565f * fZec61[i] * fYec7[(i + fYec7_idx - iZec62[i]) & 511]) - 0.029462783f * fZec63[i] * fYec7[(i + fYec7_idx - iZec64[i]) & 511]) + 0.0058925566f * fZec65[i] * fYec7[(i + fYec7_idx - iZec66[i]) & 511]) - 0.3f * fRec24[(i + fRec24_idx - 1) & 63];
+				fYec8[(i + fYec8_idx) & 63] = (((1.15f * fZec70[i]) >= 0.0f) ? 1.15f * (fZec70[i] / (0.69f * fZec70[i] + 1.0f)) : 1.15f * (fZec70[i] / (1.0f - 0.1725f * fZec70[i])));
+				fRec26[(i + fRec26_idx) & 63] = 0.995f * fRec26[(i + fRec26_idx - 1) & 63] + 0.8695652f * (fYec8[(i + fYec8_idx) & 63] - fYec8[(i + fYec8_idx - 1) & 63]);
+				fRec25[(i + fRec25_idx) & 63] = fRec26[(i + fRec26_idx) & 63];
+			}
+			/* Post code */
+			fYec8_idx_save = vsize;
+			fRec26_idx_save = vsize;
+			fRec24_idx_save = vsize;
+			fRec25_idx_save = vsize;
 			/* Vectorizable loop 89 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				output1[i] = FAUSTFLOAT(fRec25[(i + fRec25_idx) & 63]);
+				output0[i] = FAUSTFLOAT(fRec1[(i + fRec1_idx) & 63]);
 			}
 			/* Vectorizable loop 90 */
 			/* Compute code */
 			for (int i = 0; i < vsize; i = i + 1) {
-				output0[i] = FAUSTFLOAT(fRec1[(i + fRec1_idx) & 63]);
+				output1[i] = FAUSTFLOAT(fRec25[(i + fRec25_idx) & 63]);
 			}
 		}
 	}

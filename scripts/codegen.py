@@ -150,7 +150,28 @@ def run_faust_cpp(
 
 
 def run_faust_json(dsp_path: str, output_dir: str) -> str:
-    cmd = ["faust", "-json", "-o", "/dev/null", dsp_path]
+    # IMPORTANT: the flags here must match run_faust_cpp() exactly so that
+    # the varname fields (fVslider0, fVslider1, ...) in the JSON correspond
+    # to the same variables in the generated C++ DSP.  Different compilation
+    # options (especially -vec, -mcd) cause Faust to assign variable names
+    # in a different order.
+    cmd = [
+        "faust",
+        "-json",
+        "-vec",
+        "-vs",
+        "32",
+        "-lv",
+        "1",
+        "-ftz",
+        "0",
+        "-mcd",
+        "0",
+        "-single",
+        "-o",
+        "/dev/null",
+        dsp_path,
+    ]
     print(f"  Running: {' '.join(cmd)}")
     subprocess.run(cmd, check=True)
 

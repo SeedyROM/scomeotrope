@@ -19,7 +19,6 @@
 //     -> [flutter]          fast fixed-rate LFO delay (flutter)
 //     -> [output gain]      final level trim
 //     -> [tube saturation]  second pass for tape-head warmth
-//     -> [dry/wet bypass]   master bypass blend
 
 import("stdfaust.lib");
 

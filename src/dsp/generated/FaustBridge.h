@@ -41,20 +41,20 @@ public:
     {
         const int numSamples = buffer.getNumSamples();
 
-        dsp_.fVslider7 = loadParam(compStrengthParam_);
-        dsp_.fVslider3 = loadParam(vibratoSpeedParam_);
-        dsp_.fVslider8 = loadParam(compThresholdParam_);
-        dsp_.fVslider2 = loadParam(vibratoAmountParam_);
-        dsp_.fVslider5 = loadParam(noiseAmountParam_);
-        dsp_.fVslider9 = loadParam(compKneeParam_);
-        dsp_.fVslider12 = loadParam(vibratoMixParam_);
-        dsp_.fVslider1 = loadParam(flutterParam_);
-        dsp_.fVslider10 = loadParam(compAttackParam_);
+        dsp_.fVslider2 = loadParam(compStrengthParam_);
+        dsp_.fVslider1 = loadParam(vibratoSpeedParam_);
+        dsp_.fVslider4 = loadParam(compThresholdParam_);
+        dsp_.fVslider0 = loadParam(vibratoAmountParam_);
+        dsp_.fVslider3 = loadParam(noiseAmountParam_);
+        dsp_.fVslider5 = loadParam(compKneeParam_);
+        dsp_.fVslider10 = loadParam(vibratoMixParam_);
+        dsp_.fVslider12 = loadParam(flutterParam_);
+        dsp_.fVslider6 = loadParam(compAttackParam_);
         dsp_.fCheckbox0 = loadParam(vibratoBypassParam_) > 0.5f ? 1.0f : 0.0f;
-        dsp_.fVslider0 = loadParam(outputGainParam_);
-        dsp_.fVslider11 = loadParam(compReleaseParam_);
-        dsp_.fVslider6 = loadParam(compMixParam_);
-        dsp_.fVslider4 = loadParam(compMakeupParam_);
+        dsp_.fVslider11 = loadParam(outputGainParam_);
+        dsp_.fVslider7 = loadParam(compReleaseParam_);
+        dsp_.fVslider9 = loadParam(compMixParam_);
+        dsp_.fVslider8 = loadParam(compMakeupParam_);
 
         float* inputChannels[2];
         float* outputChannels[2];
