@@ -4,7 +4,9 @@ Lo-fi tape channel emulation.
 
 [![Build](https://github.com/SeedyROM/scomeotrope/actions/workflows/build.yml/badge.svg)](https://github.com/SeedyROM/scomeotrope/actions/workflows/build.yml)
 
-<!-- TODO: Add screenshot -->
+<img width="759" height="620" alt="Screenshot 2026-03-25 at 11 34 02 PM" src="https://github.com/user-attachments/assets/0f01a859-209a-49b9-940c-c6ee74925cb8" />
+<br />
+<br />
 
 Scomeotrope is a stereo tape channel plugin that layers sidechain-modulated tape hiss, a feed-forward compressor with parallel dry/wet mix, 12AX7 triode saturation, and modulated delay lines for wow and flutter. It includes front-panel controls (Input Drive, Noise, Compressor Threshold/Ratio/Mix, Vibrato Rate/Depth, Flutter, Tube Drive, Output Gain) and produces the warm, unstable character of a well-worn tape path. The DSP is written in [Faust](https://faust.grame.fr/) and the UI is built with [JUCE](https://juce.com/).
 
