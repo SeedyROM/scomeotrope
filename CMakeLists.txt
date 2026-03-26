@@ -109,6 +109,7 @@ target_sources(Scomeotrope PRIVATE
     src/PluginProcessor.cpp
     src/PluginEditor.cpp
     src/components/brand/TopBar.cpp
+    src/components/meters/LedMeter.cpp
     src/presets/PluginPresetManager.cpp
     src/components/controls/RotaryKnob.cpp
     src/ui/PluginLookAndFeel.cpp

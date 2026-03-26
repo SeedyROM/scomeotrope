@@ -51,6 +51,11 @@ FaustBridge &getFaustBridge() { return faustBridge; }
 
 float getInputMeterPeak() const { return inputMeterPeak.load(); }
   float getOutputMeterPeak() const { return outputMeterPeak.load(); }
+  float getInputMeterPeakL() const { return inputMeterPeakL.load(); }
+  float getInputMeterPeakR() const { return inputMeterPeakR.load(); }
+  float getOutputMeterPeakL() const { return outputMeterPeakL.load(); }
+  float getOutputMeterPeakR() const { return outputMeterPeakR.load(); }
+  float getGainReductionDb() const { return gainReductionDb.load(std::memory_order_relaxed); }
   ABSlot getActiveABSlot() const { return activeABSlot; }
   bool hasDistinctABState() const;
   juce::StringArray getAvailablePresetNames() const;
@@ -91,6 +96,11 @@ juce::ValueTree defaultPresetState;
   bool isApplyingABState = false;
   std::atomic<float> inputMeterPeak{0.0f};
   std::atomic<float> outputMeterPeak{0.0f};
+  std::atomic<float> inputMeterPeakL{0.0f};
+  std::atomic<float> inputMeterPeakR{0.0f};
+  std::atomic<float> outputMeterPeakL{0.0f};
+  std::atomic<float> outputMeterPeakR{0.0f};
+  std::atomic<float> gainReductionDb{0.0f};
   int meterSamplesSinceLastUpdate = 0;
   int meterUpdateIntervalSamples = 512;
   double currentSampleRate = 44100.0;

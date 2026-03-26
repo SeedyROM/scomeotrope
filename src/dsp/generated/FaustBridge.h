@@ -110,8 +110,9 @@ public:
     float getCompRelease() const { return loadParam(compReleaseParam_); }
     float getCompMix() const { return loadParam(compMixParam_); }
     float getCompMakeup() const { return loadParam(compMakeupParam_); }
-    float getCompGr() const { return dsp_.fVbargraph0; }
-    float getCompGr() const { return dsp_.fVbargraph1; }
+    float getCompGrL() const { return dsp_.fVbargraph0; }
+    float getCompGrR() const { return dsp_.fVbargraph1; }
+    float getCompGr() const { return juce::jmin(dsp_.fVbargraph0, dsp_.fVbargraph1); }
 
 private:
     static float loadParam(const std::atomic<float>* param, float fallback = 0.0f) noexcept

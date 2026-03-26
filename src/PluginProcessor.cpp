@@ -79,6 +79,10 @@ void ScomeotropeAudioProcessor::prepareToPlay(double sampleRate,
   currentSampleRate = sampleRate;
   inputMeterPeak.store(0.0f);
   outputMeterPeak.store(0.0f);
+  inputMeterPeakL.store(0.0f);
+  inputMeterPeakR.store(0.0f);
+  outputMeterPeakL.store(0.0f);
+  outputMeterPeakR.store(0.0f);
   meterSamplesSinceLastUpdate = 0;
   meterUpdateIntervalSamples = juce::jmax(256, samplesPerBlock);
 
@@ -360,18 +364,31 @@ void ScomeotropeAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
     return peak;
   };
 
+  auto getChannelPeak = [&buffer](int ch) {
+    if (ch < buffer.getNumChannels())
+      return juce::jlimit(0.0f, 1.2f, buffer.getMagnitude(ch, 0, buffer.getNumSamples()));
+    return 0.0f;
+  };
+
   meterSamplesSinceLastUpdate += buffer.getNumSamples();
   const bool shouldMeasurePeaks = meterSamplesSinceLastUpdate >= meterUpdateIntervalSamples;
   if (shouldMeasurePeaks) {
     updatePeakMeter(inputMeterPeak,
                     juce::jlimit(0.0f, 1.2f, getMaxPeak(totalNumInputChannels)),
                     meterSamplesSinceLastUpdate);
+    updatePeakMeter(inputMeterPeakL, getChannelPeak(0), meterSamplesSinceLastUpdate);
+    updatePeakMeter(inputMeterPeakR, getChannelPeak(totalNumInputChannels > 1 ? 1 : 0),
+                    meterSamplesSinceLastUpdate);
   }
 
 faustBridge.process(buffer, totalNumInputChannels, totalNumOutputChannels);
+  gainReductionDb.store(faustBridge.getCompGr(), std::memory_order_relaxed);
 if (shouldMeasurePeaks) {
     updatePeakMeter(outputMeterPeak,
                     juce::jlimit(0.0f, 1.2f, getMaxPeak(totalNumOutputChannels)),
+                    meterSamplesSinceLastUpdate);
+    updatePeakMeter(outputMeterPeakL, getChannelPeak(0), meterSamplesSinceLastUpdate);
+    updatePeakMeter(outputMeterPeakR, getChannelPeak(totalNumOutputChannels > 1 ? 1 : 0),
                     meterSamplesSinceLastUpdate);
     meterSamplesSinceLastUpdate = 0;
   }

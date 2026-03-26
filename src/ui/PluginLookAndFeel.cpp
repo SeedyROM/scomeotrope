@@ -210,6 +210,43 @@ void PluginLookAndFeel::drawToggleButton(juce::Graphics &g,
   auto bounds = button.getLocalBounds().toFloat().reduced(2.0f);
 
   const bool isOn = button.getToggleState();
+
+  // Small LED-dot style (for compact on/off switches, e.g. 16x16)
+  if (bounds.getWidth() <= 14.0f && bounds.getHeight() <= 14.0f) {
+    const float size = juce::jmin(bounds.getWidth(), bounds.getHeight());
+    auto led = bounds.withSizeKeepingCentre(size, size);
+
+    // Outer ring
+    g.setColour(juce::Colour(C::panelBorder));
+    g.fillEllipse(led);
+
+    // Inner LED
+    auto inner = led.reduced(1.5f);
+    if (isOn) {
+      g.setColour(juce::Colour(C::toggleOn));
+      g.fillEllipse(inner);
+      // Glow
+      g.setColour(juce::Colour(C::toggleGlow));
+      g.fillEllipse(led.expanded(2.0f));
+      // Re-draw LED on top of glow
+      g.setColour(juce::Colour(C::toggleOn));
+      g.fillEllipse(inner);
+      // Highlight
+      g.setColour(juce::Colour(C::toggleOn).brighter(0.5f).withAlpha(0.6f));
+      g.fillEllipse(inner.reduced(inner.getWidth() * 0.25f));
+    } else {
+      g.setColour(juce::Colour(C::toggleOff));
+      g.fillEllipse(inner);
+    }
+
+    if (shouldDrawButtonAsHighlighted) {
+      g.setColour(juce::Colour(0x18ffffff));
+      g.fillEllipse(led);
+    }
+    return;
+  }
+
+  // Standard pill-shaped toggle for larger buttons
   const float cornerRadius = bounds.getHeight() * 0.5f;
 
   if (isOn) {
