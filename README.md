@@ -1,97 +1,45 @@
 # Scomeotrope
 
-A lo-fi saturation plugin
+Lo-fi tape channel emulation.
 
-## About
+[![Build](https://github.com/SeedyROM/scomeotrope/actions/workflows/build.yml/badge.svg)](https://github.com/SeedyROM/scomeotrope/actions/workflows/build.yml)
 
-- **Author**: Zack Kollar (me@seedyrom.io)
-- **Company**: SeedyROM
-- **Formats**: VST2, VST3, AU, Standalone
+<!-- TODO: Add screenshot -->
 
-## Architecture Included
+Scomeotrope is a stereo tape channel plugin that layers sidechain-modulated tape hiss, a feed-forward compressor with parallel dry/wet mix, 12AX7 triode saturation, and modulated delay lines for wow and flutter. It includes front-panel controls (Input Drive, Noise, Compressor Threshold/Ratio/Mix, Vibrato Rate/Depth, Flutter, Tube Drive, Output Gain) and produces the warm, unstable character of a well-worn tape path. The DSP is written in [Faust](https://faust.grame.fr/) and the UI is built with [JUCE](https://juce.com/).
 
-- **Preset + A/B state architecture** is included by default.
-- **Preset storage path**: `~/Library/Application Support/SeedyROM/Scomeotrope/Presets` (platform equivalent).
-- **Preset extension**: `.scomeotropepreset`.
-- **Advanced UI profile**: `enabled`.
+The tape noise model uses a bass-frequency sidechain envelope to modulate hiss level, so the noise floor rises and falls with low-frequency program material — mimicking the behavior of a real tape transport where head contact pressure and bias interact with signal level.
 
-## Theming
+## Platforms & Formats
 
-The advanced UI uses color constants (`src/ui/ScomeotropeColors.h`) and a custom look-and-feel (`src/ui/PluginLookAndFeel.*`).
+| Platform | Architectures | Formats |
+|---|---|---|
+| macOS | Universal (arm64 + x86_64) | VST3, AU, Standalone |
+| macOS Legacy | x86_64 (10.13+) | VST3, AU, Standalone |
+| Windows | x86_64 | VST3, Standalone |
+| Linux | x86_64 | VST3, Standalone |
 
+## Downloads
 
-## Prerequisites
+Grab the latest build from [GitHub Releases](https://github.com/SeedyROM/scomeotrope/releases). CI builds run on every push to `main` and pull request. When a `v*` tag is pushed, a draft release is created automatically with per-platform zips (macOS Universal, macOS Legacy, Windows, Linux).
 
-- CMake 3.22+
-- C++17 compiler
-- [just](https://github.com/casey/just) (recommended)
-- [Faust](https://faust.grame.fr/downloads/) (only needed when editing DSP)
+## Building
 
-
-## Build
-
-```bash
-just build
-just release
-just run
-```
-
-Manual:
+Requires CMake 3.22+ and a C++17 compiler. JUCE is fetched automatically during configure.
 
 ```bash
 cmake -B build -G Ninja
 cmake --build build --config Release
 ```
 
-## CI/Distribution Build
+See [docs/building.md](docs/building.md) for platform-specific prerequisites, CMake options, and the `just` task runner.
 
-```bash
-cmake -B build -G Ninja \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DSCOMEOTROPE_COPY_AFTER_BUILD=OFF \
-  -DSCOMEOTROPE_USE_MARCH_NATIVE=OFF \
-  -DSCOMEOTROPE_ENABLE_CODEGEN=OFF
-```
+## Faust DSP
 
-## Presets and A/B
+The tape channel DSP lives in `dsp/scomeotrope.dsp`. A codegen script compiles the Faust source to C++ and generates a bridge layer that maps Faust parameters to JUCE's `AudioProcessorValueTreeState`. The generated files are committed to git, so you don't need Faust installed for normal builds; Faust is only required when you intentionally regenerate the DSP outputs.
 
-- A/B state architecture exists in the processor backend.
-- No presets are pre-populated in the advanced UI template shell.
-- Preset behavior is intended to be defined by the plugin implementation.
-
-## Advanced UI
-
-Enabled in this generated project:
-
-- Themed top bar with preset/A-B/options controls wired as placeholders.
-- Empty content area below top bar for product-specific UI.
-- Color constants and look-and-feel infrastructure ready for customization.
-
-
-## Project Structure
-
-```
-scomeotrope/
-├── CMakeLists.txt
-├── justfile
-├── src/
-│   ├── PluginProcessor.h/cpp
-│   ├── PluginEditor.h/cpp
-│   ├── presets/
-│   │   └── PluginPresetManager.h/cpp
-│   ├── data/
-│   │   ├── PluginParameters.h
-│   │   └── RuntimeParameters.h
-│   ├── components/
-│   │   ├── brand/TopBar.h/cpp
-│   │   └── controls/RotaryKnob.h/cpp
-│   └── ui/ScomeotropeColors.h, PluginLookAndFeel.h/cpp
-├── dsp/scomeotrope.dsp
-├── src/dsp/generated/
-├── scripts/codegen.py
-└── scripts/element_dev.sh
-```
+See [docs/faust-codegen.md](docs/faust-codegen.md) for details on the codegen pipeline and how to modify the DSP.
 
 ## License
 
-[Your License Here]
+[AGPLv3](LICENSE)
