@@ -38,6 +38,15 @@ public:
   /** Optional: set the label to draw above the meter strip (e.g. "L", "R"). */
   void setChannelLabel(const juce::String &label) { channelLabel = label; }
 
+  /**
+   * Enable gain-reduction meter mode.
+   *
+   * In GR mode the meter source returns dB directly (0 = no reduction,
+   * negative = more reduction). LEDs light from the top downward in a
+   * single amber colour, and the linear-to-dB conversion is skipped.
+   */
+  void setGainReductionMode(bool enabled) { grMode = enabled; if (enabled) { setPeakHoldEnabled(false); buildSegments(); } }
+
 private:
   // ---- Segment definition ----
   struct LedSegment {
@@ -57,6 +66,7 @@ private:
   int peakHoldCounter = 0;       // frames since last peak hold update
 
   bool peakHoldEnabled = true;
+  bool grMode = false;
   juce::String channelLabel;
 
   // ---- Layout cache ----

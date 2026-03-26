@@ -45,11 +45,11 @@ private:
   RotaryKnob compMixKnob;
   RotaryKnob makeupKnob;
 
-  // --- LED VU meters (input / output) ---
+  // --- LED VU meters (input) and GR meters ---
   LedMeter inputMeterL;
   LedMeter inputMeterR;
-  LedMeter outputMeterL;
-  LedMeter outputMeterR;
+  LedMeter grMeterL;
+  LedMeter grMeterR;
 
   // --- Machine Decay (vibrato) controls ---
   RotaryKnob speedKnob;

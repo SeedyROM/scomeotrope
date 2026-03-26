@@ -36,19 +36,23 @@ ScomeotropeAudioProcessorEditor::ScomeotropeAudioProcessorEditor(
   addAndMakeVisible(compMixKnob);
   addAndMakeVisible(makeupKnob);
 
-  // --- LED VU meters ---
+  // --- LED VU meters (input) ---
   addAndMakeVisible(inputMeterL);
   addAndMakeVisible(inputMeterR);
-  addAndMakeVisible(outputMeterL);
-  addAndMakeVisible(outputMeterR);
   inputMeterL.setChannelLabel("L");
   inputMeterR.setChannelLabel("R");
-  outputMeterL.setChannelLabel("L");
-  outputMeterR.setChannelLabel("R");
   inputMeterL.setMeterSource([&p] { return p.getInputMeterPeakL(); });
   inputMeterR.setMeterSource([&p] { return p.getInputMeterPeakR(); });
-  outputMeterL.setMeterSource([&p] { return p.getOutputMeterPeakL(); });
-  outputMeterR.setMeterSource([&p] { return p.getOutputMeterPeakR(); });
+
+  // --- GR meters (gain reduction, top-down amber) ---
+  addAndMakeVisible(grMeterL);
+  addAndMakeVisible(grMeterR);
+  grMeterL.setGainReductionMode(true);
+  grMeterR.setGainReductionMode(true);
+  grMeterL.setChannelLabel("L");
+  grMeterR.setChannelLabel("R");
+  grMeterL.setMeterSource([&p] { return p.getGainReductionDbL(); });
+  grMeterR.setMeterSource([&p] { return p.getGainReductionDbR(); });
 
   // --- Machine Decay controls ---
   addAndMakeVisible(speedKnob);
@@ -125,8 +129,8 @@ void ScomeotropeAudioProcessorEditor::timerCallback() {
   outputGainKnob.refreshMeter();
   inputMeterL.refresh();
   inputMeterR.refresh();
-  outputMeterL.refresh();
-  outputMeterR.refresh();
+  grMeterL.refresh();
+  grMeterR.refresh();
 }
 
 void ScomeotropeAudioProcessorEditor::refreshPresetControls() {
@@ -280,15 +284,15 @@ void ScomeotropeAudioProcessorEditor::resized() {
       inputMeterR.setBounds(meterR);
     }
 
-    // Output LED meters on the right edge (L + R side by side)
+    // GR LED meters on the right edge (L + R side by side)
     {
       auto meterArea = area.removeFromRight(meterW * 2 + meterGap);
       area.removeFromRight(meterGap);
       auto meterR = meterArea.removeFromRight(meterW);
       meterArea.removeFromRight(meterGap);
       auto meterL = meterArea;
-      outputMeterL.setBounds(meterL);
-      outputMeterR.setBounds(meterR);
+      grMeterL.setBounds(meterL);
+      grMeterR.setBounds(meterR);
     }
 
     // Remaining centre area for knob rows

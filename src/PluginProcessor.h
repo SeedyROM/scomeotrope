@@ -56,6 +56,8 @@ float getInputMeterPeak() const { return inputMeterPeak.load(); }
   float getOutputMeterPeakL() const { return outputMeterPeakL.load(); }
   float getOutputMeterPeakR() const { return outputMeterPeakR.load(); }
   float getGainReductionDb() const { return gainReductionDb.load(std::memory_order_relaxed); }
+  float getGainReductionDbL() const { return gainReductionDbL.load(std::memory_order_relaxed); }
+  float getGainReductionDbR() const { return gainReductionDbR.load(std::memory_order_relaxed); }
   ABSlot getActiveABSlot() const { return activeABSlot; }
   bool hasDistinctABState() const;
   juce::StringArray getAvailablePresetNames() const;
@@ -101,6 +103,8 @@ juce::ValueTree defaultPresetState;
   std::atomic<float> outputMeterPeakL{0.0f};
   std::atomic<float> outputMeterPeakR{0.0f};
   std::atomic<float> gainReductionDb{0.0f};
+  std::atomic<float> gainReductionDbL{0.0f};
+  std::atomic<float> gainReductionDbR{0.0f};
   int meterSamplesSinceLastUpdate = 0;
   int meterUpdateIntervalSamples = 512;
   double currentSampleRate = 44100.0;

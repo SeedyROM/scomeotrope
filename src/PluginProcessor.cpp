@@ -383,6 +383,8 @@ void ScomeotropeAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
 
 faustBridge.process(buffer, totalNumInputChannels, totalNumOutputChannels);
   gainReductionDb.store(faustBridge.getCompGr(), std::memory_order_relaxed);
+  gainReductionDbL.store(faustBridge.getCompGrL(), std::memory_order_relaxed);
+  gainReductionDbR.store(faustBridge.getCompGrR(), std::memory_order_relaxed);
 if (shouldMeasurePeaks) {
     updatePeakMeter(outputMeterPeak,
                     juce::jlimit(0.0f, 1.2f, getMaxPeak(totalNumOutputChannels)),

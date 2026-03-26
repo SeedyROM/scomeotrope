@@ -10,35 +10,59 @@ LedMeter::LedMeter() { buildSegments(); }
 
 void LedMeter::buildSegments() {
   // Build LED segments bottom-to-top.
-  // Each segment is 2 dB wide. Colour zones:
+  // Each segment is 2 dB wide.
+  //
+  // Normal mode — colour zones:
   //   -48..-18 dB  green
   //   -18..-6  dB  yellow
   //    -6..0   dB  red
+  //
+  // GR mode — single amber colour, range 0..-20 dB:
+  //   LEDs are still stored bottom-to-top but paint() lights them
+  //   from the top downward so increasing reduction fills down.
   //
   // Major labels at: -45, -30, -20, -15, -10, -6, -3, 0
 
   namespace C = ScomeotropeColors;
 
-  // dB thresholds for "major" labels
-  auto isMajor = [](float db) -> bool {
-    const float abs = std::fabs(db);
-    return abs == 0.0f || abs == 3.0f || abs == 6.0f || abs == 10.0f ||
-           abs == 15.0f || abs == 20.0f || abs == 30.0f || abs == 45.0f;
-  };
-
   segments.clear();
 
-  const float stepDb = 2.0f;
-  for (float db = minDb; db <= maxDb; db += stepDb) {
-    juce::Colour col;
-    if (db >= -6.0f)
-      col = juce::Colour(C::meterRed);
-    else if (db >= -18.0f)
-      col = juce::Colour(C::meterYellow);
-    else
-      col = juce::Colour(C::meterGreen);
+  if (grMode) {
+    // GR mode: 0 dB at top (no reduction), -20 dB at bottom.
+    // Segments stored bottom-to-top (most-negative first).
+    const float grMinDb = -20.0f;
+    const float grMaxDb = 0.0f;
+    const float stepDb = 1.0f;
 
-    segments.push_back({db, col, isMajor(db)});
+    auto isMajorGr = [](float db) -> bool {
+      const float abs = std::fabs(db);
+      return abs == 0.0f || abs == 3.0f || abs == 6.0f || abs == 10.0f ||
+             abs == 15.0f || abs == 20.0f;
+    };
+
+    for (float db = grMinDb; db <= grMaxDb; db += stepDb) {
+      segments.push_back({db, juce::Colour(C::meterOrange), isMajorGr(db)});
+    }
+  } else {
+    // Normal signal-level mode
+    auto isMajor = [](float db) -> bool {
+      const float abs = std::fabs(db);
+      return abs == 0.0f || abs == 3.0f || abs == 6.0f || abs == 10.0f ||
+             abs == 15.0f || abs == 20.0f || abs == 30.0f || abs == 45.0f;
+    };
+
+    const float stepDb = 2.0f;
+    for (float db = minDb; db <= maxDb; db += stepDb) {
+      juce::Colour col;
+      if (db >= -6.0f)
+        col = juce::Colour(C::meterRed);
+      else if (db >= -18.0f)
+        col = juce::Colour(C::meterYellow);
+      else
+        col = juce::Colour(C::meterGreen);
+
+      segments.push_back({db, col, isMajor(db)});
+    }
   }
 }
 
@@ -62,35 +86,63 @@ void LedMeter::refresh() {
   if (!meterSource)
     return;
 
-  const float rawPeak = meterSource();
-  const float targetDb = peakToDb(rawPeak);
+  const float rawValue = meterSource();
+
+  // In GR mode the source already returns dB; in normal mode convert.
+  const float targetDb = grMode ? rawValue : peakToDb(rawValue);
 
   // Ballistic smoothing: fast rise (~70ms), slower fall (~300ms)
   // At 24 Hz: rise coeff ~0.65, fall coeff ~0.12
   constexpr float riseCoeff = 0.65f;
   constexpr float fallCoeff = 0.12f;
 
-  if (targetDb > displayPeakDb)
-    displayPeakDb += (targetDb - displayPeakDb) * riseCoeff;
-  else
-    displayPeakDb += (targetDb - displayPeakDb) * fallCoeff;
+  if (grMode) {
+    // In GR mode, "rising" means more negative (more reduction).
+    if (targetDb < displayPeakDb)
+      displayPeakDb += (targetDb - displayPeakDb) * riseCoeff;
+    else
+      displayPeakDb += (targetDb - displayPeakDb) * fallCoeff;
 
-  // Snap to floor
-  if (displayPeakDb < minDb + 0.5f)
-    displayPeakDb = minDb;
+    // Snap to ceiling (no reduction)
+    if (displayPeakDb > -0.5f)
+      displayPeakDb = 0.0f;
+  } else {
+    if (targetDb > displayPeakDb)
+      displayPeakDb += (targetDb - displayPeakDb) * riseCoeff;
+    else
+      displayPeakDb += (targetDb - displayPeakDb) * fallCoeff;
+
+    // Snap to floor
+    if (displayPeakDb < minDb + 0.5f)
+      displayPeakDb = minDb;
+  }
 
   // Peak hold
   if (peakHoldEnabled) {
-    if (targetDb > peakHoldDb) {
-      peakHoldDb = targetDb;
-      peakHoldCounter = 0;
+    if (grMode) {
+      // In GR mode, peak hold tracks the most-negative (deepest reduction)
+      if (targetDb < peakHoldDb) {
+        peakHoldDb = targetDb;
+        peakHoldCounter = 0;
+      } else {
+        ++peakHoldCounter;
+        if (peakHoldCounter > peakHoldFrames) {
+          peakHoldDb += 0.8f;
+          if (peakHoldDb > 0.0f)
+            peakHoldDb = 0.0f;
+        }
+      }
     } else {
-      ++peakHoldCounter;
-      if (peakHoldCounter > peakHoldFrames) {
-        // Decay the peak hold slowly
-        peakHoldDb -= 0.8f;
-        if (peakHoldDb < minDb)
-          peakHoldDb = minDb;
+      if (targetDb > peakHoldDb) {
+        peakHoldDb = targetDb;
+        peakHoldCounter = 0;
+      } else {
+        ++peakHoldCounter;
+        if (peakHoldCounter > peakHoldFrames) {
+          peakHoldDb -= 0.8f;
+          if (peakHoldDb < minDb)
+            peakHoldDb = minDb;
+        }
       }
     }
   }
@@ -158,12 +210,27 @@ void LedMeter::paint(juce::Graphics &g) {
     const auto ledRect = juce::Rectangle<float>(stripBounds.getX(), y,
                                                  ledWidth, segmentHeight);
 
-    const bool isLit = (displayPeakDb > seg.thresholdDb);
-    const bool isPeakHold =
-        peakHoldEnabled && !isLit &&
-        (peakHoldDb >= seg.thresholdDb) &&
-        (i + 1 >= numSegs ||
-         peakHoldDb < segments[static_cast<size_t>(i + 1)].thresholdDb);
+    bool isLit = false;
+    bool isPeakHold = false;
+
+    if (grMode) {
+      // GR mode: light from top downward.
+      // displayPeakDb is negative (e.g. -10). Light segments whose
+      // thresholdDb >= displayPeakDb (i.e. from 0 down to the GR depth).
+      isLit = (displayPeakDb < -0.01f) && (seg.thresholdDb >= displayPeakDb);
+      isPeakHold =
+          peakHoldEnabled && !isLit &&
+          (peakHoldDb < -0.01f) && (seg.thresholdDb >= peakHoldDb) &&
+          (seg.thresholdDb < displayPeakDb); // only below the current lit region
+    } else {
+      // Normal mode: light from bottom upward.
+      isLit = (displayPeakDb > seg.thresholdDb);
+      isPeakHold =
+          peakHoldEnabled && !isLit &&
+          (peakHoldDb >= seg.thresholdDb) &&
+          (i + 1 >= numSegs ||
+           peakHoldDb < segments[static_cast<size_t>(i + 1)].thresholdDb);
+    }
 
     if (isLit) {
       // Lit LED: full colour with a subtle glow
