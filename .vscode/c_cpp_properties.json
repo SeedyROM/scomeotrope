@@ -1,0 +1,19 @@
+{
+  "configurations": [
+    {
+      "name": "Debug",
+      "includePath": [
+        "${workspaceFolder}/**",
+"${workspaceFolder}/src/dsp/generated",
+"build/juce_binarydata_ScomeotropeAssets"
+      ],
+      "defines": [
+        "JucePlugin_Name=\"Scomeotrope\"",
+        "JucePlugin_Manufacturer=\"SeedyROM\""
+      ],
+      "cppStandard": "c++17",
+      "configurationProvider": "ms-vscode.cmake-tools"
+    }
+  ],
+  "version": 4
+}
