@@ -156,9 +156,9 @@ with {
 // coefficients for positive (grid conduction) and negative (cutoff).
 // The rational form x/(1+k*|x|) is cheaper than tanh and gives
 // controllable asymmetry by using different k values per polarity.
-triode_clip(x) = clipped / drive
+triode_clip(x) = soft_clipped / drive
 with {
-    drive = 1.15;   // subtle overdrive — this is a channel strip, not a guitar amp
+    drive = 0.5;   // subtle overdrive — this is a channel strip, not a guitar amp
     k_pos = 0.6;    // harder clip on positive (grid conduction region)
     k_neg = 0.15;   // gentle clip on negative (cutoff region)
     xd = x * drive;
@@ -169,6 +169,9 @@ with {
     clipped = select2(xd >= 0,
         xd / (1.0 - k_neg * xd),    // negative half-wave
         xd / (1.0 + k_pos * xd));   // positive half-wave
+
+    // Soft clip the triode, use anti-aliased tanh to tame any harshness from the rational function.
+    soft_clipped = aa.tanh1(clipped);
 };
 
 // Tube stage with feedback lowpass.
@@ -347,7 +350,8 @@ eff = (noise, noise)
     : (vibrato, vibrato)
     : (flutter, flutter)
     : (_ * output_gain, _ * output_gain)
-    : (tube_stage, tube_stage);
+    // Soft clip the output instead of 12x7 gain to prevent digital clipping and add tape-head warmth.
+    : (ma.tanh, ma.tanh);
 
 //==========================================================================
 // Process
